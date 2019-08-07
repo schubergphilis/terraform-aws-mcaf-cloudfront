@@ -91,6 +91,11 @@ variable "kms_key_id" {
   description = "The KMS key ID used for bucket encryption"
 }
 
+variable "kms_key_arn" {
+  type        = string
+  description = "The KMS key ARN used for SSM parameter encryption"
+}
+
 variable "price_class" {
   type        = string
   default     = "PriceClass_100"
