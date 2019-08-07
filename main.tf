@@ -82,6 +82,16 @@ data "aws_iam_policy_document" "authentication" {
     actions   = ["s3:GetObject"]
     resources = ["${module.origin_bucket.arn}${var.origin_path}/*"]
   }
+
+  statement {
+    actions = ["kms:Decrypt"]
+    resources = [var.kms_key_arn]
+  }
+
+  statement {
+    actions = ["ssm:GetParameters"]
+    resources = ["arn:aws:ssm:*:*:parameter/cloudfront-config/${aws_cloudfront_distribution.default.id}/*"]
+  }
 }
 
 module "authentication" {
