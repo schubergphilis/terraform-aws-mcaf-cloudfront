@@ -72,55 +72,6 @@ module "origin_bucket" {
   }
 }
 
-data "aws_iam_policy_document" "authentication" {
-  statement {
-    actions = [
-      "s3:ListBucket"
-    ]
-    resources = [
-      module.origin_bucket.arn
-    ]
-  }
-
-  statement {
-    actions = [
-      "s3:GetObject"
-    ]
-    resources = [
-      "${module.origin_bucket.arn}${var.origin_path}/*"
-    ]
-  }
-
-  statement {
-    actions = [
-      "kms:Decrypt"
-    ]
-    resources = [
-      var.kms_key_arn
-    ]
-  }
-
-  statement {
-    actions = [
-      "ssm:GetParameters"
-    ]
-    resources = [
-      "arn:aws:ssm:*:*:parameter/cloudfront-config/${aws_cloudfront_distribution.default.id}/*"
-    ]
-  }
-}
-
-module "authentication" {
-  source  = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=v0.1.3"
-  name    = "${var.name}-authentication"
-  runtime = "nodejs10.x"
-  handler = "index.handler"
-  policy  = data.aws_iam_policy_document.authentication.json
-  publish = true
-  region  = "us-east-1"
-  tags    = var.tags
-}
-
 resource "aws_cloudfront_origin_access_identity" "default" {
   comment = var.name
 }
@@ -205,4 +156,71 @@ resource "aws_cloudfront_distribution" "default" {
       response_page_path    = lookup(custom_error_response.value, "response_page_path", null)
     }
   }
+}
+
+resource "tls_private_key" "default" {
+  algorithm   = "RSA"
+}
+
+resource "aws_ssm_parameter" "private_key" {
+  name   = "/cloudfront-config/${aws_cloudfront_distribution.default.id}/private_key"
+  type   = "SecureString"
+  value  = tls_private_key.default.private_key_pem
+  key_id = var.kms_key_id
+}
+
+resource "aws_ssm_parameter" "public_key" {
+  name   = "/cloudfront-config/${aws_cloudfront_distribution.default.id}/public_key"
+  type   = "SecureString"
+  value  = tls_private_key.default.public_key_pem
+  key_id = var.kms_key_id
+}
+
+data "aws_iam_policy_document" "authentication" {
+  statement {
+    actions = [
+      "s3:ListBucket"
+    ]
+    resources = [
+      module.origin_bucket.arn
+    ]
+  }
+
+  statement {
+    actions = [
+      "s3:GetObject"
+    ]
+    resources = [
+      "${module.origin_bucket.arn}${var.origin_path}/*"
+    ]
+  }
+
+  statement {
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [
+      var.kms_key_arn
+    ]
+  }
+
+  statement {
+    actions = [
+      "ssm:GetParameters"
+    ]
+    resources = [
+      "arn:aws:ssm:*:*:parameter/cloudfront-config/${aws_cloudfront_distribution.default.id}/*"
+    ]
+  }
+}
+
+module "authentication" {
+  source  = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=v0.1.3"
+  name    = "${var.name}-authentication"
+  runtime = "nodejs10.x"
+  handler = "index.handler"
+  policy  = data.aws_iam_policy_document.authentication.json
+  publish = true
+  region  = "us-east-1"
+  tags    = var.tags
 }
