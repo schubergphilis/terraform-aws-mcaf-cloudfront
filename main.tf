@@ -44,6 +44,7 @@ data "aws_iam_policy_document" "origin_bucket" {
         "s3:PutObjectAcl"
       ]
       resources = [
+        "arn:aws:s3:::${var.name}",
         "arn:aws:s3:::${var.name}/*"
       ]
       principals {

@@ -111,7 +111,7 @@ data "aws_iam_policy_document" "authentication" {
 module "authentication" {
   source   = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=v0.1.3"
   name     = "${var.name}-authentication"
-  filename = "auth_lambda/artifacts/index.zip"
+  filename = "${path.module}/auth_lambda/artifacts/index.zip"
   runtime  = "nodejs10.x"
   handler  = "index.handler"
   policy   = data.aws_iam_policy_document.authentication.json
