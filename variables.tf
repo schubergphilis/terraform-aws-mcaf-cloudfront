@@ -9,6 +9,12 @@ variable "aliases" {
   description = "Extra CNAMEs (alternate domain names), if any, for this distribution"
 }
 
+variable "authentication" {
+  type        = bool
+  default     = false
+  description = "Whether to protect the cloudfront distribution behind an Okta application"
+}
+
 variable "comment" {
   type        = string
   default     = null
@@ -94,6 +100,18 @@ variable "kms_key_id" {
 variable "kms_key_arn" {
   type        = string
   description = "The KMS key ARN used for SSM parameter encryption"
+}
+
+variable "okta_app_name" {
+  type        = string
+  default     = null
+  description = "The Okta OIDC application name"
+}
+
+variable "okta_org_name" {
+  type        = string
+  default     = null
+  description = "The Okta organization for the OIDC application"
 }
 
 variable "price_class" {
