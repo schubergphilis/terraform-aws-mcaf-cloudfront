@@ -3,6 +3,57 @@ locals {
   ssm_prefix   = "/cloudfront-config/${aws_cloudfront_distribution.default.id}"
 }
 
+data "aws_iam_policy_document" "authentication" {
+  statement {
+    actions = [
+      "s3:ListBucket"
+    ]
+    resources = [
+      module.origin_bucket.arn
+    ]
+  }
+
+  statement {
+    actions = [
+      "s3:GetObject"
+    ]
+    resources = [
+      "${module.origin_bucket.arn}${var.origin_path}/*"
+    ]
+  }
+
+  statement {
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [
+      var.kms_key_arn
+    ]
+  }
+
+  statement {
+    actions = [
+      "ssm:GetParameters"
+    ]
+    resources = [
+      "arn:aws:ssm:*:*:parameter/cloudfront-config/${aws_cloudfront_distribution.default.id}/*"
+    ]
+  }
+}
+
+module "authentication" {
+  source      = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=v0.1.3"
+  name        = "${var.name}-authentication"
+  assume_role = true
+  filename    = "${path.module}/auth_lambda/artifacts/index.zip"
+  runtime     = "nodejs10.x"
+  handler     = "index.handler"
+  policy      = data.aws_iam_policy_document.authentication.json
+  publish     = true
+  region      = "us-east-1"
+  tags        = var.tags
+}
+
 resource "okta_app_oauth" "default" {
   count                      = var.authentication ? 1 : 0
   label                      = var.okta_app_name
@@ -68,54 +119,4 @@ resource "aws_ssm_parameter" "redirect_uri" {
   name  = "${local.ssm_prefix}/redirect_uri"
   type  = "String"
   value = local.redirect_uri
-}
-
-data "aws_iam_policy_document" "authentication" {
-  statement {
-    actions = [
-      "s3:ListBucket"
-    ]
-    resources = [
-      module.origin_bucket.arn
-    ]
-  }
-
-  statement {
-    actions = [
-      "s3:GetObject"
-    ]
-    resources = [
-      "${module.origin_bucket.arn}${var.origin_path}/*"
-    ]
-  }
-
-  statement {
-    actions = [
-      "kms:Decrypt"
-    ]
-    resources = [
-      var.kms_key_arn
-    ]
-  }
-
-  statement {
-    actions = [
-      "ssm:GetParameters"
-    ]
-    resources = [
-      "arn:aws:ssm:*:*:parameter/cloudfront-config/${aws_cloudfront_distribution.default.id}/*"
-    ]
-  }
-}
-
-module "authentication" {
-  source   = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=v0.1.3"
-  name     = "${var.name}-authentication"
-  filename = "${path.module}/auth_lambda/artifacts/index.zip"
-  runtime  = "nodejs10.x"
-  handler  = "index.handler"
-  policy   = data.aws_iam_policy_document.authentication.json
-  publish  = true
-  region   = "us-east-1"
-  tags     = var.tags
 }
