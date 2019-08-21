@@ -1,6 +1,28 @@
 locals {
   redirect_uri = "https://${aws_cloudfront_distribution.default.domain_name}/_callback"
   ssm_prefix   = "/cloudfront-config/${aws_cloudfront_distribution.default.id}"
+  assume_role  = var.assume_role ? { create : true } : {}
+  assume_role_arn = format(
+    "arn:aws:iam::%s:role/%s",
+    data.aws_caller_identity.current.account_id,
+    split("/", data.aws_caller_identity.current.arn)[1]
+  )
+}
+
+data "aws_region" "current" {}
+data "aws_caller_identity" "current" {}
+
+provider "aws" {
+  alias  = "ssm"
+  region = "eu-west-1"
+
+  dynamic assume_role {
+    for_each = local.assume_role
+
+    content {
+      role_arn = local.assume_role_arn
+    }
+  }
 }
 
 data "aws_iam_policy_document" "authentication" {
@@ -76,47 +98,53 @@ resource "tls_private_key" "default" {
 }
 
 resource "aws_ssm_parameter" "client_id" {
-  count  = var.authentication ? 1 : 0
-  name   = "${local.ssm_prefix}/client_id"
-  type   = "SecureString"
-  value  = okta_app_oauth.default[0].client_id
-  key_id = var.kms_key_id
+  provider = "ssm"
+  count    = var.authentication ? 1 : 0
+  name     = "${local.ssm_prefix}/client_id"
+  type     = "SecureString"
+  value    = okta_app_oauth.default[0].client_id
+  key_id   = var.kms_key_id
 }
 
 resource "aws_ssm_parameter" "client_secret" {
-  count  = var.authentication ? 1 : 0
-  name   = "${local.ssm_prefix}/client_secret"
-  type   = "SecureString"
-  value  = okta_app_oauth.default[0].client_secret
-  key_id = var.kms_key_id
+  provider = "ssm"
+  count    = var.authentication ? 1 : 0
+  name     = "${local.ssm_prefix}/client_secret"
+  type     = "SecureString"
+  value    = okta_app_oauth.default[0].client_secret
+  key_id   = var.kms_key_id
 }
 
 resource "aws_ssm_parameter" "okta_org_name" {
-  count = var.authentication ? 1 : 0
-  name  = "${local.ssm_prefix}/okta_org_name"
-  type  = "String"
-  value = var.okta_org_name
+  provider = "ssm"
+  count    = var.authentication ? 1 : 0
+  name     = "${local.ssm_prefix}/okta_org_name"
+  type     = "String"
+  value    = var.okta_org_name
 }
 
 resource "aws_ssm_parameter" "private_key" {
-  count  = var.authentication ? 1 : 0
-  name   = "${local.ssm_prefix}/private_key"
-  type   = "SecureString"
-  value  = tls_private_key.default[0].private_key_pem
-  key_id = var.kms_key_id
+  provider = "ssm"
+  count    = var.authentication ? 1 : 0
+  name     = "${local.ssm_prefix}/private_key"
+  type     = "SecureString"
+  value    = tls_private_key.default[0].private_key_pem
+  key_id   = var.kms_key_id
 }
 
 resource "aws_ssm_parameter" "public_key" {
-  count  = var.authentication ? 1 : 0
-  name   = "${local.ssm_prefix}/public_key"
-  type   = "SecureString"
-  value  = tls_private_key.default[0].public_key_pem
-  key_id = var.kms_key_id
+  provider = "ssm"
+  count    = var.authentication ? 1 : 0
+  name     = "${local.ssm_prefix}/public_key"
+  type     = "SecureString"
+  value    = tls_private_key.default[0].public_key_pem
+  key_id   = var.kms_key_id
 }
 
 resource "aws_ssm_parameter" "redirect_uri" {
-  count = var.authentication ? 1 : 0
-  name  = "${local.ssm_prefix}/redirect_uri"
-  type  = "String"
-  value = local.redirect_uri
+  provider = "ssm"
+  count    = var.authentication ? 1 : 0
+  name     = "${local.ssm_prefix}/redirect_uri"
+  type     = "String"
+  value    = local.redirect_uri
 }
