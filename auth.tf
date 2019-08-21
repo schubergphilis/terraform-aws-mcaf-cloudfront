@@ -22,6 +22,21 @@ provider "aws" {
   }
 }
 
+resource "aws_kms_key" "default" {
+  provider                = "aws.ssm"
+  description             = "KMS key used for encrypting cloudfront SSM parameters"
+  is_enabled              = true
+  enable_key_rotation     = false
+  tags                    = var.tags
+}
+
+resource "aws_kms_alias" "default" {
+  provider      = "aws.ssm"
+  name          = "alias/cloudfront-ssm-${aws_cloudfront_distribution.default.id}"
+  target_key_id = aws_kms_key.default.key_id
+}
+
+
 data "aws_iam_policy_document" "authentication" {
   statement {
     actions = [
@@ -46,7 +61,7 @@ data "aws_iam_policy_document" "authentication" {
       "kms:Decrypt"
     ]
     resources = [
-      var.kms_key_arn
+      aws_kms_key.default.arn
     ]
   }
 
@@ -100,7 +115,7 @@ resource "aws_ssm_parameter" "client_id" {
   name     = "${local.ssm_prefix}/client_id"
   type     = "SecureString"
   value    = okta_app_oauth.default[0].client_id
-  key_id   = var.kms_key_id
+  key_id   = aws_kms_key.default.id
 }
 
 resource "aws_ssm_parameter" "client_secret" {
@@ -109,7 +124,7 @@ resource "aws_ssm_parameter" "client_secret" {
   name     = "${local.ssm_prefix}/client_secret"
   type     = "SecureString"
   value    = okta_app_oauth.default[0].client_secret
-  key_id   = var.kms_key_id
+  key_id   = aws_kms_key.default.id
 }
 
 resource "aws_ssm_parameter" "okta_org_name" {
@@ -126,7 +141,7 @@ resource "aws_ssm_parameter" "private_key" {
   name     = "${local.ssm_prefix}/private_key"
   type     = "SecureString"
   value    = tls_private_key.default[0].private_key_pem
-  key_id   = var.kms_key_id
+  key_id   = aws_kms_key.default.id
 }
 
 resource "aws_ssm_parameter" "public_key" {
@@ -135,7 +150,7 @@ resource "aws_ssm_parameter" "public_key" {
   name     = "${local.ssm_prefix}/public_key"
   type     = "SecureString"
   value    = tls_private_key.default[0].public_key_pem
-  key_id   = var.kms_key_id
+  key_id   = aws_kms_key.default.id
 }
 
 resource "aws_ssm_parameter" "redirect_uri" {

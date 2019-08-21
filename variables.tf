@@ -98,16 +98,6 @@ variable "logging" {
   description = "Enables logging for this distribution"
 }
 
-variable "kms_key_id" {
-  type        = string
-  description = "The KMS key ID used for bucket encryption"
-}
-
-variable "kms_key_arn" {
-  type        = string
-  description = "The KMS key ARN used for SSM parameter encryption"
-}
-
 variable "okta_app_name" {
   type        = string
   default     = null
