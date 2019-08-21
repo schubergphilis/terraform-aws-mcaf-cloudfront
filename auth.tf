@@ -95,7 +95,7 @@ resource "tls_private_key" "default" {
 }
 
 resource "aws_ssm_parameter" "client_id" {
-  provider = "ssm"
+  provider = "aws.ssm"
   count    = var.authentication ? 1 : 0
   name     = "${local.ssm_prefix}/client_id"
   type     = "SecureString"
@@ -104,7 +104,7 @@ resource "aws_ssm_parameter" "client_id" {
 }
 
 resource "aws_ssm_parameter" "client_secret" {
-  provider = "ssm"
+  provider = "aws.ssm"
   count    = var.authentication ? 1 : 0
   name     = "${local.ssm_prefix}/client_secret"
   type     = "SecureString"
@@ -113,7 +113,7 @@ resource "aws_ssm_parameter" "client_secret" {
 }
 
 resource "aws_ssm_parameter" "okta_org_name" {
-  provider = "ssm"
+  provider = "aws.ssm"
   count    = var.authentication ? 1 : 0
   name     = "${local.ssm_prefix}/okta_org_name"
   type     = "String"
@@ -121,7 +121,7 @@ resource "aws_ssm_parameter" "okta_org_name" {
 }
 
 resource "aws_ssm_parameter" "private_key" {
-  provider = "ssm"
+  provider = "aws.ssm"
   count    = var.authentication ? 1 : 0
   name     = "${local.ssm_prefix}/private_key"
   type     = "SecureString"
@@ -130,7 +130,7 @@ resource "aws_ssm_parameter" "private_key" {
 }
 
 resource "aws_ssm_parameter" "public_key" {
-  provider = "ssm"
+  provider = "aws.ssm"
   count    = var.authentication ? 1 : 0
   name     = "${local.ssm_prefix}/public_key"
   type     = "SecureString"
@@ -139,7 +139,7 @@ resource "aws_ssm_parameter" "public_key" {
 }
 
 resource "aws_ssm_parameter" "redirect_uri" {
-  provider = "ssm"
+  provider = "aws.ssm"
   count    = var.authentication ? 1 : 0
   name     = "${local.ssm_prefix}/redirect_uri"
   type     = "String"
