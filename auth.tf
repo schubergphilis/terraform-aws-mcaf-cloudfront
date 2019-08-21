@@ -9,9 +9,6 @@ locals {
   )
 }
 
-data "aws_region" "current" {}
-data "aws_caller_identity" "current" {}
-
 provider "aws" {
   alias  = "ssm"
   region = "eu-west-1"
