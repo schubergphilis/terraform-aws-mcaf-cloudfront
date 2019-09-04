@@ -1,25 +1,10 @@
 locals {
   redirect_uri = "https://${aws_cloudfront_distribution.default.domain_name}/_callback"
   ssm_prefix   = "/cloudfront-config/${aws_cloudfront_distribution.default.id}"
-  assume_role  = var.assume_role ? { create : true } : {}
-  assume_role_arn = format(
-    "arn:aws:iam::%s:role/%s",
-    data.aws_caller_identity.current.account_id,
-    split("/", data.aws_caller_identity.current.arn)[1]
-  )
 }
 
 provider "aws" {
   alias  = "ssm"
-  region = "eu-west-1"
-
-  dynamic assume_role {
-    for_each = local.assume_role
-
-    content {
-      role_arn = local.assume_role_arn
-    }
-  }
 }
 
 resource "aws_kms_key" "default" {
