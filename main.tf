@@ -5,8 +5,11 @@ locals {
   ) : "${var.name}%s.s3.amazonaws.com"
 }
 
+provider "aws" {
+  alias = "cloudfront"
+}
+
 data "aws_region" "current" {}
-data "aws_caller_identity" "current" {}
 
 data "aws_iam_policy_document" "origin_bucket" {
   statement {

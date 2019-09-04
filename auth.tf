@@ -3,12 +3,8 @@ locals {
   ssm_prefix   = "/cloudfront-config/${aws_cloudfront_distribution.default.id}"
 }
 
-provider "aws" {
-  alias  = "ssm"
-}
-
 resource "aws_kms_key" "default" {
-  provider            = "aws.ssm"
+  provider            = "aws.cloudfront"
   description         = "KMS key used for encrypting cloudfront SSM parameters"
   is_enabled          = true
   enable_key_rotation = false
@@ -16,7 +12,7 @@ resource "aws_kms_key" "default" {
 }
 
 resource "aws_kms_alias" "default" {
-  provider      = "aws.ssm"
+  provider      = "aws.cloudfront"
   name          = "alias/cloudfront-ssm-${aws_cloudfront_distribution.default.id}"
   target_key_id = aws_kms_key.default.key_id
 }
@@ -60,7 +56,11 @@ data "aws_iam_policy_document" "authentication" {
 }
 
 module "authentication" {
-  source      = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=v0.1.3"
+  providers = {
+    aws.lambda = aws.cloudfront
+  }
+
+  source      = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=v0.1.5"
   name        = "${var.name}-authentication"
   assume_role = true
   filename    = "${path.module}/auth_lambda/artifacts/index.zip"
@@ -68,7 +68,6 @@ module "authentication" {
   handler     = "index.handler"
   policy      = data.aws_iam_policy_document.authentication.json
   publish     = true
-  region      = "us-east-1"
   tags        = var.tags
 }
 
@@ -94,7 +93,7 @@ resource "tls_private_key" "default" {
 }
 
 resource "aws_ssm_parameter" "client_id" {
-  provider = "aws.ssm"
+  provider = "aws.cloudfront"
   count    = var.authentication ? 1 : 0
   name     = "${local.ssm_prefix}/client_id"
   type     = "SecureString"
@@ -103,7 +102,7 @@ resource "aws_ssm_parameter" "client_id" {
 }
 
 resource "aws_ssm_parameter" "client_secret" {
-  provider = "aws.ssm"
+  provider = "aws.cloudfront"
   count    = var.authentication ? 1 : 0
   name     = "${local.ssm_prefix}/client_secret"
   type     = "SecureString"
@@ -112,7 +111,7 @@ resource "aws_ssm_parameter" "client_secret" {
 }
 
 resource "aws_ssm_parameter" "okta_org_name" {
-  provider = "aws.ssm"
+  provider = "aws.cloudfront"
   count    = var.authentication ? 1 : 0
   name     = "${local.ssm_prefix}/okta_org_name"
   type     = "String"
@@ -120,7 +119,7 @@ resource "aws_ssm_parameter" "okta_org_name" {
 }
 
 resource "aws_ssm_parameter" "private_key" {
-  provider = "aws.ssm"
+  provider = "aws.cloudfront"
   count    = var.authentication ? 1 : 0
   name     = "${local.ssm_prefix}/private_key"
   type     = "SecureString"
@@ -129,7 +128,7 @@ resource "aws_ssm_parameter" "private_key" {
 }
 
 resource "aws_ssm_parameter" "public_key" {
-  provider = "aws.ssm"
+  provider = "aws.cloudfront"
   count    = var.authentication ? 1 : 0
   name     = "${local.ssm_prefix}/public_key"
   type     = "SecureString"
@@ -138,7 +137,7 @@ resource "aws_ssm_parameter" "public_key" {
 }
 
 resource "aws_ssm_parameter" "redirect_uri" {
-  provider = "aws.ssm"
+  provider = "aws.cloudfront"
   count    = var.authentication ? 1 : 0
   name     = "${local.ssm_prefix}/redirect_uri"
   type     = "String"

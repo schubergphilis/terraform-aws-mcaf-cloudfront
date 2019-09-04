@@ -9,12 +9,6 @@ variable "aliases" {
   description = "Extra CNAMEs (alternate domain names), if any, for this distribution"
 }
 
-variable "assume_role" {
-  type        = bool
-  default     = false
-  description = "Whether or not to dynamically re-assume the role using the current account"
-}
-
 variable "authentication" {
   type        = bool
   default     = false
