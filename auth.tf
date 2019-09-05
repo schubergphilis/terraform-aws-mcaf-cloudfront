@@ -60,15 +60,14 @@ module "authentication" {
     aws.lambda = aws.cloudfront
   }
 
-  source      = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=v0.1.5"
-  name        = "${var.name}-authentication"
-  assume_role = true
-  filename    = "${path.module}/auth_lambda/artifacts/index.zip"
-  runtime     = "nodejs10.x"
-  handler     = "index.handler"
-  policy      = data.aws_iam_policy_document.authentication.json
-  publish     = true
-  tags        = var.tags
+  source   = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=v0.1.5"
+  name     = "${var.name}-authentication"
+  filename = "${path.module}/auth_lambda/artifacts/index.zip"
+  runtime  = "nodejs10.x"
+  handler  = "index.handler"
+  policy   = data.aws_iam_policy_document.authentication.json
+  publish  = true
+  tags     = var.tags
 }
 
 resource "okta_app_oauth" "default" {
