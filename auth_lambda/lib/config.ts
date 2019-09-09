@@ -32,7 +32,7 @@ export async function getConfig(distributionId: string): Promise<Config | null> 
             session_duration: 43200,
         };
 
-        const ssm = new SSM({region: "eu-west-1"});
+        const ssm = new SSM({region: "us-east-1"});
         const prefix = `/cloudfront-config/${distributionId}`;
         const result = ssm.getParameters({
             Names: [
