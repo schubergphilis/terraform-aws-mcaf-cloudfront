@@ -75,7 +75,7 @@ module "origin_bucket" {
     allowed_headers = var.cors_allowed_headers
     allowed_methods = var.cors_allowed_methods
     allowed_origins = sort(
-      distinct(compact(concat(var.cors_allowed_origins, var.aliases, toList([aws_route53_record.cloudfront.*.name])))),
+      distinct(compact(concat(var.cors_allowed_origins, var.aliases, tolist([aws_route53_record.cloudfront.*.name])))),
     )
     expose_headers  = var.cors_expose_headers
     max_age_seconds = var.cors_max_age_seconds
