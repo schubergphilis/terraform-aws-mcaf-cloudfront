@@ -1,6 +1,6 @@
 locals {
   application_cert = local.subdomain ? aws_acm_certificate.default[0].arn : null
-  application_fqdn = local.subdomain ? [aws_route53_record.cloudfront[0].name] : []
+  application_fqdn = local.subdomain ? "${var.subdomain}.${data.aws_route53_zone.current[0].name}" : null
   certificate_arn  = var.certificate_arn != null ? var.certificate_arn : local.application_cert
   deployment_arn   = var.deployment_arn != null ? { create : null } : {}
   subdomain        = var.zone_id != null && var.subdomain != null
@@ -80,7 +80,7 @@ module "origin_bucket" {
     allowed_headers = var.cors_allowed_headers
     allowed_methods = var.cors_allowed_methods
     allowed_origins = sort(
-      distinct(compact(concat(var.cors_allowed_origins, var.aliases, local.application_fqdn))),
+      distinct(compact(concat(var.cors_allowed_origins, var.aliases, [local.application_fqdn]))),
     )
     expose_headers  = var.cors_expose_headers
     max_age_seconds = var.cors_max_age_seconds
@@ -90,7 +90,7 @@ module "origin_bucket" {
 resource "aws_route53_record" "cloudfront" {
   count   = local.subdomain ? 1 : 0
   zone_id = var.zone_id
-  name    = "${var.subdomain}.${data.aws_route53_zone.current[0].name}"
+  name    = local.application_fqdn
   type    = "CNAME"
   ttl     = "5"
   records = [aws_cloudfront_distribution.default.domain_name]
@@ -99,7 +99,7 @@ resource "aws_route53_record" "cloudfront" {
 resource "aws_acm_certificate" "default" {
   provider          = "aws.cloudfront"
   count             = local.subdomain ? 1 : 0
-  domain_name       = "${var.subdomain}.${data.aws_route53_zone.current[0].name}"
+  domain_name       = local.application_fqdn
   validation_method = "DNS"
   tags              = var.tags
 }
@@ -125,7 +125,7 @@ resource "aws_cloudfront_origin_access_identity" "default" {
 }
 
 resource "aws_cloudfront_distribution" "default" {
-  aliases             = distinct(compact(concat(var.aliases, local.application_fqdn)))
+  aliases             = distinct(compact(concat(var.aliases, [local.application_fqdn])))
   comment             = var.comment
   default_root_object = var.default_root_object
   enabled             = var.enabled
