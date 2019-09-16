@@ -9,7 +9,7 @@ output "arn" {
 }
 
 output "application_fqdn" {
-  value       = aws_route53_record.cloudfront.name
+  value       = var.zone_id == null || var.subdomain_name == null ? null : aws_route53_record.cloudfront[0].name
   description = "Custom FQDN pointing to the distributed application"
 }
 
