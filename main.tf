@@ -1,6 +1,6 @@
 locals {
-  application_cert = local.subdomain != null ? aws_acm_certificate.default[0].arn : null
-  application_fqdn = local.subdomain != null ? [aws_route53_record.cloudfront[0].name] : []
+  application_cert = local.subdomain ? aws_acm_certificate.default[0].arn : null
+  application_fqdn = local.subdomain ? [aws_route53_record.cloudfront[0].name] : []
   certificate_arn  = var.certificate_arn != null ? var.certificate_arn : local.application_cert
   deployment_arn   = var.deployment_arn != null ? { create : null } : {}
   subdomain        = var.zone_id != null && var.subdomain != null
