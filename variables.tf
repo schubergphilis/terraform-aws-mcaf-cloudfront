@@ -80,6 +80,12 @@ variable "enabled" {
   description = "Whether the distribution is enabled to accept requests for content"
 }
 
+variable "hide_web" {
+  type        = bool
+  default     = false
+  description = "Do not display the Okta application icon to users"
+}
+
 variable "ipv6_enabled" {
   type        = bool
   default     = false

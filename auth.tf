@@ -78,11 +78,11 @@ resource "okta_app_oauth" "default" {
   type                       = "web"
   grant_types                = ["authorization_code", "implicit"]
   groups                     = var.okta_groups
+  hide_web                   = var.hide_web
   login_uri                  = "https://${local.login_domain}/"
   redirect_uris              = [local.redirect_uri]
   response_types             = ["id_token", "code"]
   token_endpoint_auth_method = "client_secret_jwt"
-  hide_web                   = false
 
   lifecycle {
     ignore_changes = ["users", "groups"]
