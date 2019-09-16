@@ -13,9 +13,14 @@ output "status" {
   description = "Current status of the distribution"
 }
 
-output "domain_name" {
+output "distribution_fqdn" {
   value       = aws_cloudfront_distribution.default.domain_name
-  description = "Domain name corresponding to the distribution"
+  description = "FQDN pointing to the distribution"
+}
+
+output "custom_fqdn" {
+  value       = aws_route53_record.cloudfront.name
+  description = "Custom FQDN pointing to the distribution"
 }
 
 output "etag" {
