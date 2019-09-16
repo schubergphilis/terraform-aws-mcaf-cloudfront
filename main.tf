@@ -3,7 +3,8 @@ locals {
   domain_name = var.use_regional_endpoint ? format(
     "%s.s3-%s.amazonaws.com", var.name, data.aws_region.current.name
   ) : "${var.name}%s.s3.amazonaws.com"
-  application_fqdn = var.zone_id == null || var.subdomain_name == null ? [] : [aws_route53_record.cloudfront[0].name]
+  application_fqdn          = var.zone_id == null || var.subdomain_name == null ? [] : [aws_route53_record.cloudfront[0].name]
+  application_fqdn_cert_arn = var.zone_id == null || var.subdomain_name == null ? null : aws_acm_certificate.cloudfront[0].arn
 }
 
 provider "aws" {
@@ -108,7 +109,7 @@ resource "aws_cloudfront_distribution" "default" {
   }
 
   viewer_certificate {
-    acm_certificate_arn            = var.certificate_arn
+    acm_certificate_arn            = var.certificate_arn != null ? var.certificate_arn : local.application_fqdn_cert_arn
     ssl_support_method             = var.certificate_arn != null ? "sni-only" : null
     minimum_protocol_version       = var.minimum_protocol_version
     cloudfront_default_certificate = var.certificate_arn == null ? true : false
@@ -170,10 +171,36 @@ resource "aws_cloudfront_distribution" "default" {
 }
 
 resource "aws_route53_record" "cloudfront" {
-  count   = var.zone_id == null || var.subdomain_name == null ? 0 : 1
+  count = var.zone_id == null || var.subdomain_name == null ? 0 : 1
+
   zone_id = var.zone_id
   name    = "${var.subdomain_name}.${data.aws_route53_zone.current[0].name}"
   type    = "CNAME"
   ttl     = "5"
   records = [aws_cloudfront_distribution.default.domain_name]
+}
+
+resource "aws_acm_certificate" "cloudfront" {
+  count = var.zone_id == null || var.subdomain_name == null ? 0 : 1
+
+  domain_name       = aws_route53_record.cloudfront.fqdn
+  validation_method = "DNS"
+  tags              = var.tags
+}
+
+resource "aws_route53_record" "cloudfront_cert_validation" {
+  count = var.zone_id == null || var.subdomain_name == null ? 0 : 1
+
+  zone_id = data.aws_route53_zone.current.zone_id
+  name    = aws_acm_certificate.cloudfront.domain_validation_options.0.resource_record_name
+  type    = aws_acm_certificate.cloudfront.domain_validation_options.0.resource_record_type
+  ttl     = 60
+  records = [aws_acm_certificate.cloudfront.domain_validation_options.0.resource_record_value]
+}
+
+resource "aws_acm_certificate_validation" "cloudfront" {
+  count = var.zone_id == null || var.subdomain_name == null ? 0 : 1
+
+  certificate_arn         = aws_acm_certificate.cloudfront.arn
+  validation_record_fqdns = [aws_route53_record.cloudfront_cert_validation.fqdn]
 }
