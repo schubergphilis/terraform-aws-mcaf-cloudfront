@@ -192,15 +192,15 @@ resource "aws_route53_record" "cloudfront_cert_validation" {
   count = var.zone_id == null || var.subdomain_name == null ? 0 : 1
 
   zone_id = data.aws_route53_zone.current.zone_id
-  name    = aws_acm_certificate.cloudfront.domain_validation_options.0.resource_record_name
-  type    = aws_acm_certificate.cloudfront.domain_validation_options.0.resource_record_type
+  name    = aws_acm_certificate.cloudfront[0].domain_validation_options.0.resource_record_name
+  type    = aws_acm_certificate.cloudfront[0].domain_validation_options.0.resource_record_type
   ttl     = 60
-  records = [aws_acm_certificate.cloudfront.domain_validation_options.0.resource_record_value]
+  records = [aws_acm_certificate.cloudfront[0].domain_validation_options.0.resource_record_value]
 }
 
 resource "aws_acm_certificate_validation" "cloudfront" {
   count = var.zone_id == null || var.subdomain_name == null ? 0 : 1
 
-  certificate_arn         = aws_acm_certificate.cloudfront.arn
-  validation_record_fqdns = [aws_route53_record.cloudfront_cert_validation.fqdn]
+  certificate_arn         = aws_acm_certificate.cloudfront[0].arn
+  validation_record_fqdns = [aws_route53_record.cloudfront_cert_validation[0].fqdn]
 }
