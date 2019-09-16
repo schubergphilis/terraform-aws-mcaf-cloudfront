@@ -191,7 +191,7 @@ resource "aws_acm_certificate" "cloudfront" {
 resource "aws_route53_record" "cloudfront_cert_validation" {
   count = var.zone_id == null || var.subdomain_name == null ? 0 : 1
 
-  zone_id = data.aws_route53_zone.current.zone_id
+  zone_id = data.aws_route53_zone.current[0].zone_id
   name    = aws_acm_certificate.cloudfront[0].domain_validation_options.0.resource_record_name
   type    = aws_acm_certificate.cloudfront[0].domain_validation_options.0.resource_record_type
   ttl     = 60
