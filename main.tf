@@ -11,6 +11,11 @@ provider "aws" {
 
 data "aws_region" "current" {}
 
+data "aws_route53_zone" "current" {
+  count   = var.zone_id == null ? 0 : 1
+  zone_id = var.zone_id
+}
+
 data "aws_iam_policy_document" "origin_bucket" {
   statement {
     actions = [
@@ -161,4 +166,13 @@ resource "aws_cloudfront_distribution" "default" {
       response_page_path    = lookup(custom_error_response.value, "response_page_path", null)
     }
   }
+}
+
+resource "aws_route53_record" "cloudfront" {
+  count   = var.zone_id == null || var.subdomain_name == null ? 0 : 1
+  zone_id = var.zone_id
+  name    = "${var.subdomain_name}.${data.aws_route53_zone.current[0].name}"
+  type    = "CNAME"
+  ttl     = "5"
+  records = [aws_cloudfront_distribution.default.domain_name]
 }
