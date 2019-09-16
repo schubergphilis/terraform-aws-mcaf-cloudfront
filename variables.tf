@@ -216,10 +216,10 @@ variable "origin_path" {
   description = "A path that CloudFront uses to request your content from a specific directory"
 }
 
-variable "subdomain_name" {
+variable "subdomain" {
   type        = string
   default     = null
-  description = "A custom DNS subdomain name for this distribution"
+  description = "A custom DNS subdomain for this distribution"
 }
 
 variable "use_regional_endpoint" {
