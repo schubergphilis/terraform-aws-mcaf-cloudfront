@@ -1,4 +1,5 @@
 locals {
+  login_domain = local.subdomain ? aws_route53_record.cloudfront[0].name : aws_cloudfront_distribution.default.domain_name
   redirect_uri = "https://${aws_cloudfront_distribution.default.domain_name}/_callback"
   ssm_prefix   = "/cloudfront-config/${aws_cloudfront_distribution.default.id}"
 }
@@ -76,7 +77,8 @@ resource "okta_app_oauth" "default" {
   status                     = "ACTIVE"
   type                       = "web"
   grant_types                = ["authorization_code", "implicit"]
-  login_uri                  = "https://${aws_cloudfront_distribution.default.domain_name}/"
+  groups                     = var.okta_groups
+  login_uri                  = "https://${local.login_domain}/"
   redirect_uris              = [local.redirect_uri]
   response_types             = ["id_token", "code"]
   token_endpoint_auth_method = "client_secret_jwt"
