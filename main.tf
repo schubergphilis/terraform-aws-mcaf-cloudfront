@@ -110,9 +110,9 @@ resource "aws_cloudfront_distribution" "default" {
 
   viewer_certificate {
     acm_certificate_arn            = var.certificate_arn != null ? var.certificate_arn : local.application_fqdn_cert_arn
-    ssl_support_method             = var.certificate_arn != null ? "sni-only" : null
+    ssl_support_method             = var.certificate_arn != null || local.application_fqdn_cert_arn != null ? "sni-only" : null
     minimum_protocol_version       = var.minimum_protocol_version
-    cloudfront_default_certificate = var.certificate_arn == null ? true : false
+    cloudfront_default_certificate = var.certificate_arn == null && local.application_fqdn_cert_arn == null ? true : false
   }
 
   default_cache_behavior {
@@ -181,6 +181,8 @@ resource "aws_route53_record" "cloudfront" {
 }
 
 resource "aws_acm_certificate" "cloudfront" {
+  provider = "aws.cloudfront"
+
   count = var.zone_id == null || var.subdomain_name == null ? 0 : 1
 
   domain_name       = "${var.subdomain_name}.${data.aws_route53_zone.current[0].name}"
@@ -199,6 +201,8 @@ resource "aws_route53_record" "cloudfront_cert_validation" {
 }
 
 resource "aws_acm_certificate_validation" "cloudfront" {
+  provider = "aws.cloudfront"
+
   count = var.zone_id == null || var.subdomain_name == null ? 0 : 1
 
   certificate_arn         = aws_acm_certificate.cloudfront[0].arn
