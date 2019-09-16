@@ -1,10 +1,13 @@
 locals {
-  deployment_arn = var.deployment_arn != null ? { create : null } : {}
+  application_cert = local.subdomain != null ? aws_acm_certificate.default[0].arn : null
+  application_fqdn = local.subdomain != null ? [aws_route53_record.cloudfront[0].name] : []
+  certificate_arn  = var.certificate_arn != null ? var.certificate_arn : local.application_cert
+  deployment_arn   = var.deployment_arn != null ? { create : null } : {}
+  subdomain        = var.zone_id != null && var.subdomain != null
+
   domain_name = var.use_regional_endpoint ? format(
     "%s.s3-%s.amazonaws.com", var.name, data.aws_region.current.name
   ) : "${var.name}%s.s3.amazonaws.com"
-  application_fqdn          = var.zone_id == null || var.subdomain_name == null ? [] : [aws_route53_record.cloudfront[0].name]
-  application_fqdn_cert_arn = var.zone_id == null || var.subdomain_name == null ? null : aws_acm_certificate.cloudfront[0].arn
 }
 
 provider "aws" {
@@ -14,7 +17,7 @@ provider "aws" {
 data "aws_region" "current" {}
 
 data "aws_route53_zone" "current" {
-  count   = var.zone_id == null ? 0 : 1
+  count   = local.subdomain ? 1 : 0
   zone_id = var.zone_id
 }
 
@@ -84,12 +87,45 @@ module "origin_bucket" {
   }
 }
 
+resource "aws_route53_record" "cloudfront" {
+  count   = local.subdomain ? 1 : 0
+  zone_id = var.zone_id
+  name    = "${var.subdomain}.${data.aws_route53_zone.current[0].name}"
+  type    = "CNAME"
+  ttl     = "5"
+  records = [aws_cloudfront_distribution.default.domain_name]
+}
+
+resource "aws_acm_certificate" "default" {
+  provider          = "aws.cloudfront"
+  count             = local.subdomain ? 1 : 0
+  domain_name       = "${var.subdomain}.${data.aws_route53_zone.current[0].name}"
+  validation_method = "DNS"
+  tags              = var.tags
+}
+
+resource "aws_route53_record" "validation" {
+  count   = local.subdomain ? 1 : 0
+  zone_id = data.aws_route53_zone.current[0].zone_id
+  name    = aws_acm_certificate.default[0].domain_validation_options.0.resource_record_name
+  type    = aws_acm_certificate.default[0].domain_validation_options.0.resource_record_type
+  ttl     = 60
+  records = [aws_acm_certificate.default[0].domain_validation_options.0.resource_record_value]
+}
+
+resource "aws_acm_certificate_validation" "default" {
+  provider                = "aws.cloudfront"
+  count                   = local.subdomain ? 1 : 0
+  certificate_arn         = aws_acm_certificate.default[0].arn
+  validation_record_fqdns = [aws_route53_record.validation[0].fqdn]
+}
+
 resource "aws_cloudfront_origin_access_identity" "default" {
   comment = var.name
 }
 
 resource "aws_cloudfront_distribution" "default" {
-  aliases             = var.aliases
+  aliases             = distinct(compact(concat(var.aliases, local.application_fqdn)))
   comment             = var.comment
   default_root_object = var.default_root_object
   enabled             = var.enabled
@@ -109,10 +145,10 @@ resource "aws_cloudfront_distribution" "default" {
   }
 
   viewer_certificate {
-    acm_certificate_arn            = var.certificate_arn != null ? var.certificate_arn : local.application_fqdn_cert_arn
-    ssl_support_method             = var.certificate_arn != null || local.application_fqdn_cert_arn != null ? "sni-only" : null
+    acm_certificate_arn            = var.certificate_arn
+    ssl_support_method             = var.certificate_arn != null ? "sni-only" : null
     minimum_protocol_version       = var.minimum_protocol_version
-    cloudfront_default_certificate = var.certificate_arn == null && local.application_fqdn_cert_arn == null ? true : false
+    cloudfront_default_certificate = var.certificate_arn == null ? true : false
   }
 
   default_cache_behavior {
@@ -168,43 +204,4 @@ resource "aws_cloudfront_distribution" "default" {
       response_page_path    = lookup(custom_error_response.value, "response_page_path", null)
     }
   }
-}
-
-resource "aws_route53_record" "cloudfront" {
-  count = var.zone_id == null || var.subdomain_name == null ? 0 : 1
-
-  zone_id = var.zone_id
-  name    = "${var.subdomain_name}.${data.aws_route53_zone.current[0].name}"
-  type    = "CNAME"
-  ttl     = "5"
-  records = [aws_cloudfront_distribution.default.domain_name]
-}
-
-resource "aws_acm_certificate" "cloudfront" {
-  provider = "aws.cloudfront"
-
-  count = var.zone_id == null || var.subdomain_name == null ? 0 : 1
-
-  domain_name       = "${var.subdomain_name}.${data.aws_route53_zone.current[0].name}"
-  validation_method = "DNS"
-  tags              = var.tags
-}
-
-resource "aws_route53_record" "cloudfront_cert_validation" {
-  count = var.zone_id == null || var.subdomain_name == null ? 0 : 1
-
-  zone_id = data.aws_route53_zone.current[0].zone_id
-  name    = aws_acm_certificate.cloudfront[0].domain_validation_options.0.resource_record_name
-  type    = aws_acm_certificate.cloudfront[0].domain_validation_options.0.resource_record_type
-  ttl     = 60
-  records = [aws_acm_certificate.cloudfront[0].domain_validation_options.0.resource_record_value]
-}
-
-resource "aws_acm_certificate_validation" "cloudfront" {
-  provider = "aws.cloudfront"
-
-  count = var.zone_id == null || var.subdomain_name == null ? 0 : 1
-
-  certificate_arn         = aws_acm_certificate.cloudfront[0].arn
-  validation_record_fqdns = [aws_route53_record.cloudfront_cert_validation[0].fqdn]
 }
