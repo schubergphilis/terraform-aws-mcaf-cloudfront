@@ -76,7 +76,7 @@ resource "okta_app_oauth" "default" {
   status                     = "ACTIVE"
   type                       = "web"
   grant_types                = ["authorization_code", "implicit"]
-  login_uri                  = aws_route53_record.cloudfront.count == 1 ? "https://${aws_route53_record.cloudfront[0].name}/" : "https://${aws_cloudfront_distribution.default.domain_name}/"
+  login_uri                  = var.zone_id == null || var.subdomain_name == null ? "https://${aws_cloudfront_distribution.default.domain_name}/" : "https://${aws_route53_record.cloudfront[0].name}/"
   redirect_uris              = [local.redirect_uri]
   response_types             = ["id_token", "code"]
   token_endpoint_auth_method = "client_secret_jwt"
