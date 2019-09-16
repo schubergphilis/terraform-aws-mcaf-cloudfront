@@ -183,7 +183,7 @@ resource "aws_route53_record" "cloudfront" {
 resource "aws_acm_certificate" "cloudfront" {
   count = var.zone_id == null || var.subdomain_name == null ? 0 : 1
 
-  domain_name       = aws_route53_record.cloudfront.fqdn
+  domain_name       = "${var.subdomain_name}.${data.aws_route53_zone.current[0].name}"
   validation_method = "DNS"
   tags              = var.tags
 }
