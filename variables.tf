@@ -104,6 +104,12 @@ variable "okta_org_name" {
   description = "The Okta organization for the OIDC application"
 }
 
+variable "okta_groups" {
+  type        = list(string)
+  default     = null
+  description = "The default groups assigned to the Okta OIDC application"
+}
+
 variable "price_class" {
   type        = string
   default     = "PriceClass_100"
