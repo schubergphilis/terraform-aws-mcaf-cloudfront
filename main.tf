@@ -3,6 +3,7 @@ locals {
   domain_name = var.use_regional_endpoint ? format(
     "%s.s3-%s.amazonaws.com", var.name, data.aws_region.current.name
   ) : "${var.name}%s.s3.amazonaws.com"
+  application_fqdn = var.zone_id == null || var.subdomain_name == null ? [] : [aws_route53_record.cloudfront[0].name]
 }
 
 provider "aws" {
@@ -10,6 +11,11 @@ provider "aws" {
 }
 
 data "aws_region" "current" {}
+
+data "aws_route53_zone" "current" {
+  count   = var.zone_id == null ? 0 : 1
+  zone_id = var.zone_id
+}
 
 data "aws_iam_policy_document" "origin_bucket" {
   statement {
@@ -70,7 +76,7 @@ module "origin_bucket" {
     allowed_headers = var.cors_allowed_headers
     allowed_methods = var.cors_allowed_methods
     allowed_origins = sort(
-      distinct(compact(concat(var.cors_allowed_origins, var.aliases))),
+      distinct(compact(concat(var.cors_allowed_origins, var.aliases, local.application_fqdn))),
     )
     expose_headers  = var.cors_expose_headers
     max_age_seconds = var.cors_max_age_seconds
@@ -161,4 +167,13 @@ resource "aws_cloudfront_distribution" "default" {
       response_page_path    = lookup(custom_error_response.value, "response_page_path", null)
     }
   }
+}
+
+resource "aws_route53_record" "cloudfront" {
+  count   = var.zone_id == null || var.subdomain_name == null ? 0 : 1
+  zone_id = var.zone_id
+  name    = "${var.subdomain_name}.${data.aws_route53_zone.current[0].name}"
+  type    = "CNAME"
+  ttl     = "5"
+  records = [aws_cloudfront_distribution.default.domain_name]
 }

@@ -104,6 +104,12 @@ variable "okta_org_name" {
   description = "The Okta organization for the OIDC application"
 }
 
+variable "okta_groups" {
+  type        = list(string)
+  default     = null
+  description = "The default groups assigned to the Okta OIDC application"
+}
+
 variable "price_class" {
   type        = string
   default     = "PriceClass_100"
@@ -210,10 +216,22 @@ variable "origin_path" {
   description = "A path that CloudFront uses to request your content from a specific directory"
 }
 
+variable "subdomain_name" {
+  type        = string
+  default     = null
+  description = "A custom DNS subdomain name for this distribution"
+}
+
 variable "use_regional_endpoint" {
   type        = bool
   default     = false
   description = "Whether to use a regional instead of the global endpoint address"
+}
+
+variable "zone_id" {
+  type        = string
+  default     = null
+  description = "ID of the Route53 zone in which to create the subdomain record"
 }
 
 variable "tags" {
