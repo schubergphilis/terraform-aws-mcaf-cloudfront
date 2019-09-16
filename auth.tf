@@ -1,6 +1,6 @@
 locals {
   login_domain = local.subdomain ? aws_route53_record.cloudfront[0].name : aws_cloudfront_distribution.default.domain_name
-  redirect_uri = "https://${aws_cloudfront_distribution.default.domain_name}/_callback"
+  redirect_uri = "https://${local.login_domain}/_callback"
   ssm_prefix   = "/cloudfront-config/${aws_cloudfront_distribution.default.id}"
 }
 
