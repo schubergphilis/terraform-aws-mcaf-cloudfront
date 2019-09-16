@@ -8,19 +8,14 @@ output "arn" {
   description = "ARN of the CloudFront distribution"
 }
 
-output "status" {
-  value       = aws_cloudfront_distribution.default.status
-  description = "Current status of the distribution"
+output "application_fqdn" {
+  value       = aws_route53_record.cloudfront.name
+  description = "Custom FQDN pointing to the distributed application"
 }
 
 output "distribution_fqdn" {
   value       = aws_cloudfront_distribution.default.domain_name
   description = "FQDN pointing to the distribution"
-}
-
-output "custom_fqdn" {
-  value       = aws_route53_record.cloudfront.name
-  description = "Custom FQDN pointing to the distribution"
 }
 
 output "etag" {
@@ -36,4 +31,9 @@ output "bucket_arn" {
 output "bucket_name" {
   value       = module.origin_bucket.name
   description = "Name of the origin bucket"
+}
+
+output "status" {
+  value       = aws_cloudfront_distribution.default.status
+  description = "Current status of the distribution"
 }
