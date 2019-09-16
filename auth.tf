@@ -80,6 +80,7 @@ resource "okta_app_oauth" "default" {
   redirect_uris              = [local.redirect_uri]
   response_types             = ["id_token", "code"]
   token_endpoint_auth_method = "client_secret_jwt"
+  groups                     = var.okta_groups
 
   lifecycle {
     ignore_changes = ["users", "groups"]
