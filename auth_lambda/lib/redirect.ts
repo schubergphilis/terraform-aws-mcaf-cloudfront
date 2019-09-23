@@ -30,14 +30,16 @@ export function redirect(config: Config, request, callback) {
                     "key": "Set-Cookie",
                     "value" : serialize("TOKEN", "", {
                         path: "/",
-                        expires: new Date(1970, 1, 1, 0, 0, 0, 0)
+                        expires: new Date(1970, 1, 1, 0, 0, 0, 0),
+                        secure: true
                     })
                 },
                 {
                     "key": "Set-Cookie",
                     "value" : serialize("NONCE", n[1], {
                         path: "/",
-                        httpOnly: true
+                        httpOnly: true,
+                        secure: true
                     })
                 }
             ],
