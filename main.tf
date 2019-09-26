@@ -180,9 +180,13 @@ resource "aws_cloudfront_distribution" "default" {
     min_ttl                = var.min_ttl
     max_ttl                = var.max_ttl
 
-    lambda_function_association {
-      event_type = "viewer-request"
-      lambda_arn = module.authentication.qualified_arn
+    dynamic "lambda_function_association" {
+      for_each = var.authentication ? ["create"] : []
+
+      content {
+        event_type = "viewer-request"
+        lambda_arn = module.authentication.qualified_arn
+      }
     }
 
     dynamic "lambda_function_association" {
