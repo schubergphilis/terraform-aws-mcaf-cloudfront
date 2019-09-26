@@ -15,6 +15,12 @@ variable "authentication" {
   description = "Whether to protect the cloudfront distribution behind an Okta application"
 }
 
+variable "bucket_policy" {
+  type = string
+  default = null
+  description = "The bucket policy to merge with the Cloudfront permissions"
+}
+
 variable "comment" {
   type        = string
   default     = null
