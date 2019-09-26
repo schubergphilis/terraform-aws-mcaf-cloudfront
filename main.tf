@@ -8,9 +8,7 @@ locals {
     "${var.subdomain}.${data.aws_route53_zone.current[0].name}", "/[.]$/", ""
   ) : null
 
-  domain_name = var.use_regional_endpoint ? format(
-    "%s.s3-%s.amazonaws.com", var.name, data.aws_region.current.name
-  ) : "${var.name}%s.s3.amazonaws.com"
+  domain_name = var.use_regional_endpoint ? "${var.name}.s3-${data.aws_region.current.name}.amazonaws.com" : "${var.name}.s3.amazonaws.com"
 }
 
 provider "aws" {
