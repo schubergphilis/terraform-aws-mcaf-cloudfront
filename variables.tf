@@ -16,9 +16,30 @@ variable "authentication" {
 }
 
 variable "bucket_policy" {
-  type = string
-  default = null
+  type        = string
+  default     = null
   description = "The bucket policy to merge with the Cloudfront permissions"
+}
+
+variable "block_public_acls" {
+  type        = bool
+  default     = true
+  description = "Whether Amazon S3 should block public ACLs for this bucket"
+}
+variable "block_public_policy" {
+  type        = bool
+  default     = true
+  description = "Whether Amazon S3 should block public bucket policies for this bucket"
+}
+variable "ignore_public_acls" {
+  type        = bool
+  default     = true
+  description = "Whether Amazon S3 should ignore public ACLs for this bucket"
+}
+variable "restrict_public_buckets" {
+  type        = bool
+  default     = true
+  description = "Whether Amazon S3 should restrict public bucket policies for this bucket"
 }
 
 variable "comment" {

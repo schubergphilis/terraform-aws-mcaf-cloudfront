@@ -75,11 +75,15 @@ data "aws_iam_policy_document" "origin_bucket" {
 }
 
 module "origin_bucket" {
-  source     = "github.com/schubergphilis/terraform-aws-mcaf-s3?ref=v0.1.4"
-  name       = var.name
-  policy     = data.aws_iam_policy_document.origin_bucket.json
-  versioning = true
-  tags       = var.tags
+  source                  = "github.com/schubergphilis/terraform-aws-mcaf-s3?ref=v0.1.5"
+  name                    = var.name
+  block_public_acls       = var.block_public_acls
+  block_public_policy     = var.block_public_policy
+  ignore_public_acls      = var.ignore_public_acls
+  restrict_public_buckets = var.restrict_public_buckets
+  policy                  = data.aws_iam_policy_document.origin_bucket.json
+  versioning              = true
+  tags                    = var.tags
 
   cors_rule = {
     allowed_headers = var.cors_allowed_headers
