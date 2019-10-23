@@ -1,10 +1,9 @@
 locals {
-  application_cert = local.subdomain ? aws_acm_certificate.default[0].arn : null
+  application_cert = var.create_subdomain ? aws_acm_certificate.default[0].arn : null
   certificate_arn  = var.certificate_arn != null ? var.certificate_arn : local.application_cert
   deployment_arn   = var.deployment_arn != null ? { create : null } : {}
-  subdomain        = var.zone_id != null && var.subdomain != null
 
-  application_fqdn = local.subdomain ? replace(
+  application_fqdn = var.create_subdomain ? replace(
     "${var.subdomain}.${data.aws_route53_zone.current[0].name}", "/[.]$/", ""
   ) : null
 
@@ -20,7 +19,7 @@ provider "aws" {
 data "aws_region" "current" {}
 
 data "aws_route53_zone" "current" {
-  count   = local.subdomain ? 1 : 0
+  count   = var.create_subdomain ? 1 : 0
   zone_id = var.zone_id
 }
 
@@ -97,7 +96,7 @@ module "origin_bucket" {
 }
 
 resource "aws_route53_record" "cloudfront" {
-  count   = local.subdomain ? 1 : 0
+  count   = var.create_subdomain ? 1 : 0
   zone_id = var.zone_id
   name    = local.application_fqdn
   type    = "CNAME"
@@ -107,14 +106,14 @@ resource "aws_route53_record" "cloudfront" {
 
 resource "aws_acm_certificate" "default" {
   provider          = "aws.cloudfront"
-  count             = local.subdomain ? 1 : 0
+  count             = var.create_subdomain ? 1 : 0
   domain_name       = local.application_fqdn
   validation_method = "DNS"
   tags              = var.tags
 }
 
 resource "aws_route53_record" "validation" {
-  count   = local.subdomain ? 1 : 0
+  count   = var.create_subdomain ? 1 : 0
   zone_id = data.aws_route53_zone.current[0].zone_id
   name    = aws_acm_certificate.default[0].domain_validation_options.0.resource_record_name
   type    = aws_acm_certificate.default[0].domain_validation_options.0.resource_record_type
@@ -124,7 +123,7 @@ resource "aws_route53_record" "validation" {
 
 resource "aws_acm_certificate_validation" "default" {
   provider                = "aws.cloudfront"
-  count                   = local.subdomain ? 1 : 0
+  count                   = var.create_subdomain ? 1 : 0
   certificate_arn         = aws_acm_certificate.default[0].arn
   validation_record_fqdns = [aws_route53_record.validation[0].fqdn]
 }

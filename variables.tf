@@ -78,6 +78,12 @@ variable "cors_max_age_seconds" {
   description = "Specifies time (in seconds) the browser can cache the response for a preflight request"
 }
 
+variable "create_subdomain" {
+  type        = bool
+  default     = true
+  description = "Whether the subdomain has to be created"
+}
+
 variable "custom_error_response" {
   type = list(object({
     error_caching_min_ttl = string
