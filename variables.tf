@@ -251,8 +251,7 @@ variable "origin_path" {
 
 variable "subdomain" {
   type        = string
-  default     = null
-  description = "A custom DNS subdomain for this distribution"
+  description = "A DNS subdomain for this distribution"
 }
 
 variable "use_regional_endpoint" {
@@ -263,7 +262,6 @@ variable "use_regional_endpoint" {
 
 variable "zone_id" {
   type        = string
-  default     = null
   description = "ID of the Route53 zone in which to create the subdomain record"
 }
 
