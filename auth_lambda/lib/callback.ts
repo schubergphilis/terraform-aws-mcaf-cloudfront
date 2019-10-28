@@ -115,15 +115,55 @@ export async function handleCallback(config: Config, request: CloudFrontRequest,
                                             } // Options
                                         ), {
                                             path: '/',
-                                            maxAge: config.session_duration
+                                            maxAge: config.session_duration,
+                                            httpOnly: true,
+                                            secure: true
                                         })
                                     },
                                     {
                                         "key": "Set-Cookie",
                                         "value" : serialize('NONCE', '', {
                                             path: '/',
-                                            expires: new Date(1970, 1, 1, 0, 0, 0, 0)
+                                            expires: new Date(1970, 1, 1, 0, 0, 0, 0),
+                                            httpOnly: true,
+                                            secure: true
                                         })
+                                    },
+                                ],
+                                "content-security-policy" : [
+                                    {
+                                        "key": "Content-Security-Policy",
+                                        "value": "default-src 'none'; img-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'"
+                                    }
+                                ],
+                                "referrer-policy" : [
+                                    {
+                                        "key": "Referrer-Policy",
+                                        "value": "same-origin"
+                                    }
+                                ],
+                                "strict-transport-security" : [
+                                    {
+                                        "key": "Strict-Transport-Security",
+                                        "value": "max-age=63072000; includeSubdomains; preload"
+                                    }
+                                ],
+                                "x-content-type-options" : [
+                                    {
+                                        "key": "X-Content-Type-Options",
+                                        "value": "nosniff"
+                                    }
+                                ],
+                                "x-frame-options" : [
+                                    {
+                                        "key": "X-Frame-Options",
+                                        "value": "DENY"
+                                    }
+                                ],
+                                "x-xss-protection" : [
+                                    {
+                                        "key": "X-XSS-Protection",
+                                        "value": "1; mode=block"
                                     }
                                 ],
                             },
