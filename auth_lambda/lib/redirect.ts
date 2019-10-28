@@ -31,6 +31,7 @@ export function redirect(config: Config, request, callback) {
                     "value" : serialize("TOKEN", "", {
                         path: "/",
                         expires: new Date(1970, 1, 1, 0, 0, 0, 0),
+                        httpOnly: true,
                         secure: true
                     })
                 },

@@ -115,14 +115,18 @@ export async function handleCallback(config: Config, request: CloudFrontRequest,
                                             } // Options
                                         ), {
                                             path: '/',
-                                            maxAge: config.session_duration
+                                            maxAge: config.session_duration,
+                                            httpOnly: true,
+                                            secure: true
                                         })
                                     },
                                     {
                                         "key": "Set-Cookie",
                                         "value" : serialize('NONCE', '', {
                                             path: '/',
-                                            expires: new Date(1970, 1, 1, 0, 0, 0, 0)
+                                            expires: new Date(1970, 1, 1, 0, 0, 0, 0),
+                                            httpOnly: true,
+                                            secure: true
                                         })
                                     },
                                 ],
