@@ -5,7 +5,7 @@ locals {
 }
 
 resource "aws_kms_key" "default" {
-  provider            = "aws.cloudfront"
+  provider            = aws.cloudfront
   description         = "KMS key used for encrypting cloudfront SSM parameters"
   is_enabled          = true
   enable_key_rotation = false
@@ -13,7 +13,7 @@ resource "aws_kms_key" "default" {
 }
 
 resource "aws_kms_alias" "default" {
-  provider      = "aws.cloudfront"
+  provider      = aws.cloudfront
   name          = "alias/cloudfront-ssm-${aws_cloudfront_distribution.default.id}"
   target_key_id = aws_kms_key.default.key_id
 }
@@ -85,7 +85,7 @@ resource "okta_app_oauth" "default" {
   token_endpoint_auth_method = "client_secret_jwt"
 
   lifecycle {
-    ignore_changes = ["users", "groups"]
+    ignore_changes = [users, groups]
   }
 }
 
@@ -95,7 +95,7 @@ resource "tls_private_key" "default" {
 }
 
 resource "aws_ssm_parameter" "client_id" {
-  provider = "aws.cloudfront"
+  provider = aws.cloudfront
   count    = var.authentication ? 1 : 0
   name     = "${local.ssm_prefix}/client_id"
   type     = "SecureString"
@@ -104,7 +104,7 @@ resource "aws_ssm_parameter" "client_id" {
 }
 
 resource "aws_ssm_parameter" "client_secret" {
-  provider = "aws.cloudfront"
+  provider = aws.cloudfront
   count    = var.authentication ? 1 : 0
   name     = "${local.ssm_prefix}/client_secret"
   type     = "SecureString"
@@ -113,7 +113,7 @@ resource "aws_ssm_parameter" "client_secret" {
 }
 
 resource "aws_ssm_parameter" "okta_org_name" {
-  provider = "aws.cloudfront"
+  provider = aws.cloudfront
   count    = var.authentication ? 1 : 0
   name     = "${local.ssm_prefix}/okta_org_name"
   type     = "String"
@@ -121,7 +121,7 @@ resource "aws_ssm_parameter" "okta_org_name" {
 }
 
 resource "aws_ssm_parameter" "private_key" {
-  provider = "aws.cloudfront"
+  provider = aws.cloudfront
   count    = var.authentication ? 1 : 0
   name     = "${local.ssm_prefix}/private_key"
   type     = "SecureString"
@@ -130,7 +130,7 @@ resource "aws_ssm_parameter" "private_key" {
 }
 
 resource "aws_ssm_parameter" "public_key" {
-  provider = "aws.cloudfront"
+  provider = aws.cloudfront
   count    = var.authentication ? 1 : 0
   name     = "${local.ssm_prefix}/public_key"
   type     = "SecureString"
@@ -139,7 +139,7 @@ resource "aws_ssm_parameter" "public_key" {
 }
 
 resource "aws_ssm_parameter" "redirect_uri" {
-  provider = "aws.cloudfront"
+  provider = aws.cloudfront
   count    = var.authentication ? 1 : 0
   name     = "${local.ssm_prefix}/redirect_uri"
   type     = "String"

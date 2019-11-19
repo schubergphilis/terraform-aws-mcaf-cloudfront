@@ -100,7 +100,7 @@ resource "aws_route53_record" "cloudfront" {
 }
 
 resource "aws_acm_certificate" "default" {
-  provider          = "aws.cloudfront"
+  provider          = aws.cloudfront
   domain_name       = local.application_fqdn
   validation_method = "DNS"
   tags              = var.tags
@@ -115,7 +115,7 @@ resource "aws_route53_record" "validation" {
 }
 
 resource "aws_acm_certificate_validation" "default" {
-  provider                = "aws.cloudfront"
+  provider                = aws.cloudfront
   certificate_arn         = aws_acm_certificate.default.arn
   validation_record_fqdns = [aws_route53_record.validation.fqdn]
 }
