@@ -101,6 +101,7 @@ resource "aws_ssm_parameter" "client_id" {
   type     = "SecureString"
   value    = okta_app_oauth.default[0].client_id
   key_id   = aws_kms_key.default.id
+  tags     = var.tags
 }
 
 resource "aws_ssm_parameter" "client_secret" {
@@ -110,6 +111,7 @@ resource "aws_ssm_parameter" "client_secret" {
   type     = "SecureString"
   value    = okta_app_oauth.default[0].client_secret
   key_id   = aws_kms_key.default.id
+  tags     = var.tags
 }
 
 resource "aws_ssm_parameter" "okta_org_name" {
@@ -118,6 +120,7 @@ resource "aws_ssm_parameter" "okta_org_name" {
   name     = "${local.ssm_prefix}/okta_org_name"
   type     = "String"
   value    = var.okta_org_name
+  tags     = var.tags
 }
 
 resource "aws_ssm_parameter" "private_key" {
@@ -127,6 +130,7 @@ resource "aws_ssm_parameter" "private_key" {
   type     = "SecureString"
   value    = tls_private_key.default[0].private_key_pem
   key_id   = aws_kms_key.default.id
+  tags     = var.tags
 }
 
 resource "aws_ssm_parameter" "public_key" {
@@ -136,6 +140,7 @@ resource "aws_ssm_parameter" "public_key" {
   type     = "SecureString"
   value    = tls_private_key.default[0].public_key_pem
   key_id   = aws_kms_key.default.id
+  tags     = var.tags
 }
 
 resource "aws_ssm_parameter" "redirect_uri" {
@@ -144,4 +149,5 @@ resource "aws_ssm_parameter" "redirect_uri" {
   name     = "${local.ssm_prefix}/redirect_uri"
   type     = "String"
   value    = local.redirect_uri
+  tags     = var.tags
 }
