@@ -169,13 +169,13 @@ variable "certificate_arn" {
 
 variable "minimum_protocol_version" {
   type        = string
-  default     = "TLSv1"
+  default     = "TLSv1.1_2016"
   description = "The minimum version of the SSL protocol that you want CloudFront to use for HTTPS connections"
 }
 
 variable "allowed_methods" {
   type        = list(string)
-  default     = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+  default     = ["GET", "HEAD", "POST", "PUT"]
   description = "Controls which HTTP methods CloudFront processes and forwards"
 }
 
