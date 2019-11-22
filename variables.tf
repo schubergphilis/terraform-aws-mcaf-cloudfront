@@ -175,7 +175,7 @@ variable "minimum_protocol_version" {
 
 variable "allowed_methods" {
   type        = list(string)
-  default     = ["GET", "HEAD", "POST", "PUT"]
+  default     = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
   description = "Controls which HTTP methods CloudFront processes and forwards"
 }
 
