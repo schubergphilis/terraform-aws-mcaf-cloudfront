@@ -32,7 +32,8 @@ export function unauthorized(error, error_description, error_uri, callback) {
                     "value" : serialize("TOKEN", "", {
                         path: "/",
                         expires: new Date(1970, 1, 1, 0, 0, 0, 0),
-                        secure: true
+                        secure: true,
+                        sameSite: "lax"
                     })
                 },
                 {
@@ -41,7 +42,8 @@ export function unauthorized(error, error_description, error_uri, callback) {
                         path: "/",
                         expires: new Date(1970, 1, 1, 0, 0, 0, 0),
                         httpOnly: true,
-                        secure: true
+                        secure: true,
+                        sameSite: "lax"
                     })
                 }
             ],

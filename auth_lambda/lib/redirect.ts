@@ -32,7 +32,8 @@ export function redirect(config: Config, request, callback) {
                         path: "/",
                         expires: new Date(1970, 1, 1, 0, 0, 0, 0),
                         httpOnly: true,
-                        secure: true
+                        secure: true,
+                        sameSite: "lax"
                     })
                 },
                 {
@@ -40,7 +41,8 @@ export function redirect(config: Config, request, callback) {
                     "value" : serialize("NONCE", n[1], {
                         path: "/",
                         httpOnly: true,
-                        secure: true
+                        secure: true,
+                        sameSite: "lax"
                     })
                 }
             ],
