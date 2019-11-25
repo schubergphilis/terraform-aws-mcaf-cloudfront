@@ -117,7 +117,8 @@ export async function handleCallback(config: Config, request: CloudFrontRequest,
                                             path: '/',
                                             maxAge: config.session_duration,
                                             httpOnly: true,
-                                            secure: true
+                                            secure: true,
+                                            sameSite: "lax"
                                         })
                                     },
                                     {
@@ -126,7 +127,8 @@ export async function handleCallback(config: Config, request: CloudFrontRequest,
                                             path: '/',
                                             expires: new Date(1970, 1, 1, 0, 0, 0, 0),
                                             httpOnly: true,
-                                            secure: true
+                                            secure: true,
+                                            sameSite: "lax"
                                         })
                                     },
                                 ],
