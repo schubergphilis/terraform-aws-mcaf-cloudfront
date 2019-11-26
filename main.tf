@@ -1,8 +1,8 @@
 locals {
-  application_cert = aws_acm_certificate.default.arn
-  application_fqdn = replace("${var.subdomain}.${data.aws_route53_zone.current.name}", "/[.]$/", "")
-  certificate_arn  = var.certificate_arn != null ? var.certificate_arn : local.application_cert
-  deployment_arn   = var.deployment_arn != null ? { create : null } : {}
+  application_fqdn  = replace("${var.subdomain}.${data.aws_route53_zone.current.name}", "/[.]$/", "")
+  certificate_arn   = var.certificate_arn != null ? var.certificate_arn : aws_acm_certificate.default.0.arn
+  certificate_count = var.certificate_arn == null ? 1 : 0
+  deployment_arn    = var.deployment_arn != null ? { create : null } : {}
 
   domain_name = var.use_regional_endpoint ? format(
     "%s.s3-%s.amazonaws.com", var.name, data.aws_region.current.name
@@ -100,6 +100,7 @@ resource "aws_route53_record" "cloudfront" {
 }
 
 resource "aws_acm_certificate" "default" {
+  count             = local.certificate_count
   provider          = aws.cloudfront
   domain_name       = local.application_fqdn
   validation_method = "DNS"
@@ -107,17 +108,19 @@ resource "aws_acm_certificate" "default" {
 }
 
 resource "aws_route53_record" "validation" {
+  count   = local.certificate_count
   zone_id = data.aws_route53_zone.current.zone_id
-  name    = aws_acm_certificate.default.domain_validation_options.0.resource_record_name
-  type    = aws_acm_certificate.default.domain_validation_options.0.resource_record_type
+  name    = aws_acm_certificate.default.0.domain_validation_options.0.resource_record_name
+  type    = aws_acm_certificate.default.0.domain_validation_options.0.resource_record_type
   ttl     = 60
-  records = [aws_acm_certificate.default.domain_validation_options.0.resource_record_value]
+  records = [aws_acm_certificate.default.0.domain_validation_options.0.resource_record_value]
 }
 
 resource "aws_acm_certificate_validation" "default" {
+  count                   = local.certificate_count
   provider                = aws.cloudfront
-  certificate_arn         = aws_acm_certificate.default.arn
-  validation_record_fqdns = [aws_route53_record.validation.fqdn]
+  certificate_arn         = aws_acm_certificate.default.0.arn
+  validation_record_fqdns = [aws_route53_record.validation.0.fqdn]
 }
 
 resource "aws_cloudfront_origin_access_identity" "default" {
