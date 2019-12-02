@@ -260,6 +260,12 @@ variable "use_regional_endpoint" {
   description = "Whether to use a regional instead of the global endpoint address"
 }
 
+variable "wait_for_deployment" {
+  type        = bool
+  default     = true
+  description = "Whether to wait for the deployment of the CloudFront Distribution to be complete"
+}
+
 variable "zone_id" {
   type        = string
   description = "ID of the Route53 zone in which to create the subdomain record"

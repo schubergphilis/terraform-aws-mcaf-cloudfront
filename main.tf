@@ -138,7 +138,7 @@ resource "aws_cloudfront_distribution" "default" {
   enabled             = var.enabled
   is_ipv6_enabled     = var.ipv6_enabled
   price_class         = var.price_class
-  wait_for_deployment = true
+  wait_for_deployment = var.wait_for_deployment
   tags                = var.tags
 
   origin {
