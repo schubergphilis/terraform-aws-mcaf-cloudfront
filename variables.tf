@@ -26,16 +26,19 @@ variable "block_public_acls" {
   default     = true
   description = "Whether Amazon S3 should block public ACLs for this bucket"
 }
+
 variable "block_public_policy" {
   type        = bool
   default     = true
   description = "Whether Amazon S3 should block public bucket policies for this bucket"
 }
+
 variable "ignore_public_acls" {
   type        = bool
   default     = true
   description = "Whether Amazon S3 should ignore public ACLs for this bucket"
 }
+
 variable "restrict_public_buckets" {
   type        = bool
   default     = true
@@ -252,6 +255,12 @@ variable "origin_path" {
 variable "subdomain" {
   type        = string
   description = "A DNS subdomain for this distribution"
+}
+
+variable "cookie_domain" {
+  type        = string
+  default     = null
+  description = "The domain to set the authentication cookie on"
 }
 
 variable "use_regional_endpoint" {

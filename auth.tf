@@ -1,7 +1,8 @@
 locals {
-  login_domain = aws_route53_record.cloudfront.name
-  redirect_uri = "https://${local.login_domain}/_callback"
-  ssm_prefix   = "/cloudfront-config/${aws_cloudfront_distribution.default.id}"
+  login_domain  = aws_route53_record.cloudfront.name
+  cookie_domain = var.cookie_domain != null ? var.cookie_domain : local.login_domain
+  redirect_uri  = "https://${local.login_domain}/_callback"
+  ssm_prefix    = "/cloudfront-config/${aws_cloudfront_distribution.default.id}"
 }
 
 resource "aws_kms_key" "default" {
@@ -149,5 +150,14 @@ resource "aws_ssm_parameter" "redirect_uri" {
   name     = "${local.ssm_prefix}/redirect_uri"
   type     = "String"
   value    = local.redirect_uri
+  tags     = var.tags
+}
+
+resource "aws_ssm_parameter" "cookie_domain" {
+  provider = aws.cloudfront
+  count    = var.authentication ? 1 : 0
+  name     = "${local.ssm_prefix}/cookie_domain"
+  type     = "String"
+  value    = local.cookie_domain
   tags     = var.tags
 }
