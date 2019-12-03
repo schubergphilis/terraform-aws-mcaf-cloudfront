@@ -118,7 +118,8 @@ export async function handleCallback(config: Config, request: CloudFrontRequest,
                                             maxAge: config.session_duration,
                                             httpOnly: true,
                                             secure: true,
-                                            sameSite: "lax"
+                                            sameSite: "none",
+                                            domain: config.cookie_domain
                                         })
                                     },
                                     {
