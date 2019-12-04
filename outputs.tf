@@ -37,3 +37,13 @@ output "status" {
   value       = aws_cloudfront_distribution.default.status
   description = "Current status of the distribution"
 }
+
+output "okta_client_id" {
+  value       = okta_app_oauth.default[0].client_id
+  description = "Okta App Client ID"
+}
+
+output "jwt_public_key_ssm_path" {
+  value       = aws_ssm_parameter.public_key[0].name
+  description = "SSM path for the JWT public key"
+}

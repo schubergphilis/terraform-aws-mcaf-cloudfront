@@ -11,5 +11,5 @@ package: compile
 	cd dist && yarn install --production
 	mkdir artifacts && cd dist && zip -r9 ../artifacts/index.zip .
 
-deploy:
+deploy: package
 	AWS_DEFAULT_REGION=us-east-1 aws lambda update-function-code --function-name ${FUNCTION} --zip-file fileb://artifacts/index.zip

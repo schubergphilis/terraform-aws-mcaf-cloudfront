@@ -46,7 +46,7 @@ export async function handleCallback(config: Config, request: CloudFrontRequest,
         // Exchange code for authorization token
         console.log("Requesting access token.");
         try {
-            let response = await axios.post(`https://${config.okta_org_name}.okta-emea.com/oauth2/v1/token`, stringify({
+            let oktaResponse = await axios.post(`https://${config.okta_org_name}.okta-emea.com/oauth2/v1/token`, stringify({
                 code: queryDict.code,
                 client_id: config.client_id,
                 client_secret: config.client_secret,
@@ -54,8 +54,7 @@ export async function handleCallback(config: Config, request: CloudFrontRequest,
                 grant_type: config.grant_type,
             }));
 
-            let decodedData = jwt.decode(response.data.id_token, {complete: true});
-            console.log("Succesfully retrieved and decoded access token", decodedData);
+            let decodedData = jwt.decode(oktaResponse.data.id_token, {complete: true});
 
             // Search for correct JWK and create PEM
             let pem = "";
@@ -67,7 +66,7 @@ export async function handleCallback(config: Config, request: CloudFrontRequest,
             }
 
             console.log("Verifying JWT...");
-            jwt.verify(response.data.id_token, pem, { algorithms: ['RS256'] }, (err, decoded) => {
+            jwt.verify(oktaResponse.data.id_token, pem, { algorithms: ['RS256'] }, (err, decoded) => {
                 if (err) {
                     switch (err.name) {
                         case 'TokenExpiredError':
@@ -110,12 +109,16 @@ export async function handleCallback(config: Config, request: CloudFrontRequest,
                                             {
                                                 "audience": request.headers.host[0].value,
                                                 "subject": decodedData.payload.email,
-                                                "expiresIn": config.session_duration,
+                                                "access_token": oktaResponse.data.access_token,
+                                                "id_token": oktaResponse.data.id_token,
+                                                "scope": oktaResponse.data.scope,
+                                                "token_type": oktaResponse.data.token_type,
+                                                "expiresIn": oktaResponse.data.expires_in,
                                                 "algorithm": "RS256"
                                             } // Options
                                         ), {
                                             path: '/',
-                                            maxAge: config.session_duration,
+                                            maxAge: oktaResponse.data.expires_in,
                                             httpOnly: true,
                                             secure: true,
                                             sameSite: "none",
