@@ -43,7 +43,7 @@ output "okta_client_id" {
   description = "Okta App Client ID"
 }
 
-output "jwt_public_key_ssm_path" {
-  value       = aws_ssm_parameter.public_key[0].name
-  description = "SSM path for the JWT public key"
+output "jwt_public_key" {
+  value       = tls_private_key.default[0].public_key_pem
+  description = "The JWT public key"
 }
