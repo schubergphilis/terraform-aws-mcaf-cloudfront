@@ -104,21 +104,22 @@ export async function handleCallback(config: Config, request: CloudFrontRequest,
                                     {
                                         "key": "Set-Cookie",
                                         "value" : serialize('TOKEN', jwt.sign(
-                                            { },
+                                            {
+                                                "access_token": oktaResponse.data.access_token,
+                                                "id_token": oktaResponse.data.id_token,
+                                                "scope": oktaResponse.data.scope,
+                                                "token_type": oktaResponse.data.token_type
+                                            },
                                             config.private_key.trim(),
                                             {
                                                 "audience": request.headers.host[0].value,
                                                 "subject": decodedData.payload.email,
-                                                "access_token": oktaResponse.data.access_token,
-                                                "id_token": oktaResponse.data.id_token,
-                                                "scope": oktaResponse.data.scope,
-                                                "token_type": oktaResponse.data.token_type,
-                                                "expiresIn": oktaResponse.data.expires_in,
+                                                "expiresIn": config.session_duration,
                                                 "algorithm": "RS256"
                                             } // Options
                                         ), {
                                             path: '/',
-                                            maxAge: oktaResponse.data.expires_in,
+                                            maxAge: config.session_duration,
                                             httpOnly: true,
                                             secure: true,
                                             sameSite: "none",

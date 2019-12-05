@@ -12,6 +12,7 @@ export interface Config {
     response_type: string;
     redirect_uri: string;
     okta_org_name: string;
+    session_duration: number;
     cookie_domain: string;
 }
 
@@ -29,6 +30,7 @@ export async function getConfig(distributionId: string): Promise<Config | null> 
             scope: "openid email",
             grant_type:  "authorization_code",
             response_type:  "code",
+            session_duration: 43200,
             cookie_domain: "",
         };
 
@@ -44,6 +46,7 @@ export async function getConfig(distributionId: string): Promise<Config | null> 
                 `${prefix}/redirect_uri`,
                 `${prefix}/scope`,
                 `${prefix}/grant_type`,
+                `${prefix}/session_duration`,
                 `${prefix}/cookie_domain`,
             ],
             WithDecryption: true
