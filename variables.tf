@@ -110,6 +110,12 @@ variable "enabled" {
   description = "Whether the distribution is enabled to accept requests for content"
 }
 
+variable "hide_ios" {
+  type        = bool
+  default     = false
+  description = "Do not display the Okta application icon to users on mobile app"
+}
+
 variable "hide_web" {
   type        = bool
   default     = false

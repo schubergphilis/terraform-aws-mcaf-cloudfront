@@ -79,6 +79,7 @@ resource "okta_app_oauth" "default" {
   type                       = "web"
   grant_types                = ["authorization_code", "implicit"]
   groups                     = var.okta_groups
+  hide_ios                   = var.hide_ios
   hide_web                   = var.hide_web
   login_uri                  = "https://${local.login_domain}/"
   redirect_uris              = [local.redirect_uri]
