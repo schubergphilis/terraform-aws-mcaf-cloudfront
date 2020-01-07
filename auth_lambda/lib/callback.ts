@@ -103,31 +103,6 @@ export async function handleCallback(config: Config, request: CloudFrontRequest,
                                 "set-cookie" : [
                                     {
                                         "key": "Set-Cookie",
-                                        "value" : serialize('TOKEN', jwt.sign(
-                                            {
-                                                "access_token": oktaResponse.data.access_token,
-                                                "id_token": oktaResponse.data.id_token,
-                                                "scope": oktaResponse.data.scope,
-                                                "token_type": oktaResponse.data.token_type
-                                            },
-                                            config.private_key.trim(),
-                                            {
-                                                "audience": request.headers.host[0].value,
-                                                "subject": decodedData.payload.email,
-                                                "expiresIn": config.session_duration,
-                                                "algorithm": "RS256"
-                                            } // Options
-                                        ), {
-                                            path: '/',
-                                            maxAge: config.session_duration,
-                                            httpOnly: true,
-                                            secure: true,
-                                            sameSite: "none",
-                                            domain: config.cookie_domain
-                                        })
-                                    },
-                                    {
-                                        "key": "Set-Cookie",
                                         "value" : serialize('NONCE', '', {
                                             path: '/',
                                             expires: new Date(1970, 1, 1, 0, 0, 0, 0),
@@ -175,6 +150,37 @@ export async function handleCallback(config: Config, request: CloudFrontRequest,
                                 ],
                             },
                         };
+
+                        config.cookie_domain.split(',').forEach(subdomain => {
+                            const url = new URL(`http://${subdomain}`);
+                            console.log(`Setting cookie for domain ${url.hostname} with path ${url.pathname}`);
+
+                            response.headers["set-cookie"].push({
+                                "key": "Set-Cookie",
+                                "value" : serialize('TOKEN', jwt.sign(
+                                    {
+                                        "access_token": oktaResponse.data.access_token,
+                                        "id_token": oktaResponse.data.id_token,
+                                        "scope": oktaResponse.data.scope,
+                                        "token_type": oktaResponse.data.token_type
+                                    },
+                                    config.private_key.trim(),
+                                    {
+                                        "audience": request.headers.host[0].value,
+                                        "subject": decodedData.payload.email,
+                                        "expiresIn": config.session_duration,
+                                        "algorithm": "RS256"
+                                    } // Options
+                                ), {
+                                    path: url.pathname,
+                                    maxAge: config.session_duration,
+                                    httpOnly: true,
+                                    secure: true,
+                                    sameSite: "none",
+                                    domain: url.hostname
+                                })
+                            })
+                        });
 
                         callback(null, response);
                     }
