@@ -39,6 +39,12 @@ variable "ignore_public_acls" {
   description = "Whether Amazon S3 should ignore public ACLs for this bucket"
 }
 
+variable "login_uri_path" {
+  type        = string
+  default     = null
+  description = "Additional path to the login URL"
+}
+
 variable "restrict_public_buckets" {
   type        = bool
   default     = true

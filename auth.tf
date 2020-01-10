@@ -3,6 +3,7 @@ locals {
   cookie_domain = var.cookie_domain != null ? var.cookie_domain : local.login_domain
   redirect_uri  = "https://${local.login_domain}/_callback"
   ssm_prefix    = "/cloudfront-config/${aws_cloudfront_distribution.default.id}"
+  login_uri     = var.login_uri_path != null ? format("https://%s/%s", local.login_domain, trimprefix(var.login_uri_path, "/")) : "https://${local.login_domain}/"
 }
 
 resource "aws_kms_key" "default" {
@@ -81,7 +82,7 @@ resource "okta_app_oauth" "default" {
   groups                     = var.okta_groups
   hide_ios                   = var.hide_ios
   hide_web                   = var.hide_web
-  login_uri                  = "https://${local.login_domain}/"
+  login_uri                  = local.login_uri
   redirect_uris              = [local.redirect_uri]
   response_types             = ["id_token", "code"]
   token_endpoint_auth_method = "client_secret_jwt"
