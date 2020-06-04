@@ -5,7 +5,6 @@ locals {
   okta_groups   = var.authentication ? var.okta_groups : []
   redirect_uri  = "https://${local.login_domain}/_callback"
   ssm_prefix    = "/cloudfront-config/${aws_cloudfront_distribution.default.id}"
-  login_uri     = var.login_uri_path != null ? format("https://%s/%s", local.login_domain, trimprefix(var.login_uri_path, "/")) : "https://${local.login_domain}/"
 }
 
 resource "aws_kms_key" "default" {
