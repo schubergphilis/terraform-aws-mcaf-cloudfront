@@ -1,6 +1,8 @@
 locals {
-  login_domain  = aws_route53_record.cloudfront.name
   cookie_domain = var.cookie_domain != null ? var.cookie_domain : local.login_domain
+  login_domain  = aws_route53_record.cloudfront.name
+  login_uri     = var.login_uri_path != null ? format("https://%s/%s", local.login_domain, trimprefix(var.login_uri_path, "/")) : "https://${local.login_domain}/"
+  okta_groups   = var.authentication ? var.okta_groups : []
   redirect_uri  = "https://${local.login_domain}/_callback"
   ssm_prefix    = "/cloudfront-config/${aws_cloudfront_distribution.default.id}"
   login_uri     = var.login_uri_path != null ? format("https://%s/%s", local.login_domain, trimprefix(var.login_uri_path, "/")) : "https://${local.login_domain}/"
@@ -79,7 +81,6 @@ resource "okta_app_oauth" "default" {
   status                     = "ACTIVE"
   type                       = "web"
   grant_types                = ["authorization_code", "implicit"]
-  groups                     = var.okta_groups
   hide_ios                   = var.hide_ios
   hide_web                   = var.hide_web
   login_uri                  = local.login_uri
@@ -89,6 +90,17 @@ resource "okta_app_oauth" "default" {
 
   lifecycle {
     ignore_changes = [users, groups]
+  }
+}
+
+resource "okta_app_group_assignment" "default" {
+  for_each = toset(local.okta_groups)
+
+  app_id   = okta_app_oauth.default[0].id
+  group_id = each.value
+
+  lifecycle {
+    ignore_changes = [priority]
   }
 }
 
