@@ -78,7 +78,6 @@ resource "okta_app_oauth" "default" {
   status                     = "ACTIVE"
   type                       = "web"
   grant_types                = ["authorization_code", "implicit"]
-  groups                     = var.okta_groups
   hide_ios                   = var.hide_ios
   hide_web                   = var.hide_web
   login_uri                  = "https://${local.login_domain}/"
@@ -88,6 +87,17 @@ resource "okta_app_oauth" "default" {
 
   lifecycle {
     ignore_changes = [users, groups]
+  }
+}
+
+resource "okta_app_group_assignment" "default" {
+  for_each = toset(var.okta_groups)
+
+  app_id   = okta_app_oauth.default.id
+  group_id = each.value
+
+  lifecycle {
+    ignore_changes = [priority]
   }
 }
 
