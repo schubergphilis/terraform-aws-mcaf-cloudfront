@@ -15,6 +15,12 @@ variable "authentication" {
   description = "Whether to protect the cloudfront distribution behind an Okta application"
 }
 
+variable "bucket_force_destroy" {
+  type        = bool
+  default     = false
+  description = "A boolean that indicates all objects should be deleted when deleting the origin bucket"
+}
+
 variable "bucket_policy" {
   type        = string
   default     = null
