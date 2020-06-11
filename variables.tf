@@ -33,6 +33,12 @@ variable "block_public_policy" {
   description = "Whether Amazon S3 should block public bucket policies for this bucket"
 }
 
+variable "force_destroy" {
+  type        = bool
+  default     = false
+  description = "A boolean indicating all resources (and their data) should be deleted on destroy"
+}
+
 variable "ignore_public_acls" {
   type        = bool
   default     = true
