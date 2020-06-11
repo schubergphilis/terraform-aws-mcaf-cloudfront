@@ -15,12 +15,6 @@ variable "authentication" {
   description = "Whether to protect the cloudfront distribution behind an Okta application"
 }
 
-variable "bucket_force_destroy" {
-  type        = bool
-  default     = false
-  description = "A boolean that indicates all objects should be deleted when deleting the origin bucket"
-}
-
 variable "bucket_policy" {
   type        = string
   default     = null
@@ -37,6 +31,12 @@ variable "block_public_policy" {
   type        = bool
   default     = true
   description = "Whether Amazon S3 should block public bucket policies for this bucket"
+}
+
+variable "force_destroy" {
+  type        = bool
+  default     = false
+  description = "A boolean indicating all resources (and their data) should be deleted on destroy"
 }
 
 variable "ignore_public_acls" {

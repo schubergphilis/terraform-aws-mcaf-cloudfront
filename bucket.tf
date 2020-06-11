@@ -53,7 +53,7 @@ module "origin_bucket" {
   name                    = var.name
   block_public_acls       = var.block_public_acls
   block_public_policy     = var.block_public_policy
-  force_destroy           = var.bucket_force_destroy
+  force_destroy           = var.force_destroy
   ignore_public_acls      = var.ignore_public_acls
   restrict_public_buckets = var.restrict_public_buckets
   policy                  = data.aws_iam_policy_document.origin_bucket.json
