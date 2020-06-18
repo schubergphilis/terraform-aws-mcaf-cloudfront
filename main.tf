@@ -143,4 +143,6 @@ resource "aws_cloudfront_distribution" "default" {
       response_page_path    = lookup(custom_error_response.value, "response_page_path", null)
     }
   }
+
+  depends_on = [aws_acm_certificate_validation.default]
 }
