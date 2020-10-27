@@ -64,7 +64,7 @@ module "authentication" {
     aws.lambda = aws.cloudfront
   }
 
-  source   = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=v0.1.8"
+  source   = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=v0.1.22"
   name     = "${var.name}-authentication"
   filename = "${path.module}/auth_lambda/artifacts/index.zip"
   runtime  = "nodejs10.x"
