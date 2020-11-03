@@ -88,7 +88,7 @@ resource "okta_app_oauth" "default" {
   token_endpoint_auth_method = "client_secret_jwt"
 
   lifecycle {
-    ignore_changes = [users, groups]
+    ignore_changes = [users, groups, consent_method]
   }
 }
 
