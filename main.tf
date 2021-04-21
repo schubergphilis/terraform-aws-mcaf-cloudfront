@@ -9,10 +9,6 @@ locals {
   ) : "${var.name}.s3.amazonaws.com"
 }
 
-provider "aws" {
-  alias = "cloudfront"
-}
-
 data "aws_region" "current" {}
 
 data "aws_route53_zone" "current" {
