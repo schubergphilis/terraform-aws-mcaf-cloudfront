@@ -51,6 +51,12 @@ variable "login_uri_path" {
   description = "Additional path to the login URL"
 }
 
+variable "redirect_uri_path" {
+  type        = string
+  default     = "_callback"
+  description = "Additional path to the login redirect URL"
+}
+
 variable "restrict_public_buckets" {
   type        = bool
   default     = true

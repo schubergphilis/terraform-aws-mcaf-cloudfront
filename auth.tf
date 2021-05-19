@@ -3,7 +3,7 @@ locals {
   login_domain  = aws_route53_record.cloudfront.name
   login_uri     = var.login_uri_path != null ? format("https://%s/%s", local.login_domain, trimprefix(var.login_uri_path, "/")) : "https://${local.login_domain}/"
   okta_groups   = var.authentication ? var.okta_groups : []
-  redirect_uri  = "https://${local.login_domain}/_callback"
+  redirect_uri  = "https://${local.login_domain}/${trimprefix(var.redirect_uri_path, "/")}"
   ssm_prefix    = "/cloudfront-config/${aws_cloudfront_distribution.default.id}"
 }
 
