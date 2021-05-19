@@ -64,6 +64,7 @@ module "authentication" {
     aws.lambda = aws.cloudfront
   }
 
+  count    = var.authentication && !var.okta_spa ? 1 : 0
   source   = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=v0.1.23"
   name     = "${var.name}-authentication"
   filename = "${path.module}/auth_lambda/artifacts/index.zip"
@@ -78,16 +79,17 @@ resource "okta_app_oauth" "default" {
   count                      = var.authentication ? 1 : 0
   label                      = var.okta_app_name
   status                     = "ACTIVE"
-  type                       = "web"
+  type                       = var.okta_spa ? "browser" : "web"
+  consent_method             = var.okta_spa ? "REQUIRED" : "TRUSTED"
   grant_types                = ["authorization_code", "implicit"]
   hide_ios                   = var.hide_ios
   hide_web                   = var.hide_web
   login_uri                  = local.login_uri
-  login_mode                 = "SPEC"
-  login_scopes               = ["openid", "profile", "email"]
+  login_mode                 = var.okta_spa ? "DISABLED" : "SPEC"
+  login_scopes               = ["openid", "profile", "email", "groups"]
   redirect_uris              = [local.redirect_uri]
-  response_types             = ["id_token", "code"]
-  token_endpoint_auth_method = "client_secret_jwt"
+  response_types             = ["token", "id_token", "code"]
+  token_endpoint_auth_method = var.okta_spa ? "none" : "client_secret_jwt"
 
   lifecycle {
     ignore_changes = [users, groups, consent_method]

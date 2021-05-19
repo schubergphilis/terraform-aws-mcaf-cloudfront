@@ -164,6 +164,12 @@ variable "okta_groups" {
   description = "The default groups assigned to the Okta OIDC application"
 }
 
+variable "okta_spa" {
+  type        = bool
+  default     = false
+  description = "Set to true if this is a single page web application"
+}
+
 variable "price_class" {
   type        = string
   default     = "PriceClass_100"

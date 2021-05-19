@@ -107,7 +107,7 @@ resource "aws_cloudfront_distribution" "default" {
 
       content {
         event_type = "viewer-request"
-        lambda_arn = module.authentication.qualified_arn
+        lambda_arn = var.authentication && !var.okta_spa ? module.authentication[0].qualified_arn : null
       }
     }
 
