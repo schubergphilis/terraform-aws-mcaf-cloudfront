@@ -39,11 +39,11 @@ output "status" {
 }
 
 output "okta_client_id" {
-  value       = var.authentication ? okta_app_oauth.default[0].client_id : ""
+  value       = try(okta_app_oauth.default[0].client_id, null)
   description = "Okta App Client ID"
 }
 
 output "jwt_public_key" {
-  value       = var.authentication ? tls_private_key.default[0].public_key_pem : ""
+  value       = try(tls_private_key.default[0].public_key_pem, null)
   description = "The JWT public key"
 }
