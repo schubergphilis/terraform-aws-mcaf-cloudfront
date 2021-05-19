@@ -1,11 +1,11 @@
 locals {
-  cookie_domain = var.cookie_domain != null ? var.cookie_domain : local.login_domain
-  login_domain  = aws_route53_record.cloudfront.name
-  login_uri     = var.login_uri_path != null ? format("https://%s/%s", local.login_domain, trimprefix(var.login_uri_path, "/")) : "https://${local.login_domain}/"
-  okta_groups   = var.authentication ? var.okta_groups : []
-  redirect_uri  = "https://${local.login_domain}/${trimprefix(var.redirect_uri_path, "/")}"
-  ssm_prefix    = "/cloudfront-config/${aws_cloudfront_distribution.default.id}"
-  auth_lambda   = var.authentication && !var.okta_spa ? 1 : 0
+  cookie_domain      = var.cookie_domain != null ? var.cookie_domain : local.login_domain
+  create_auth_lambda = var.authentication && !var.okta_spa ? ["create"] : []
+  login_domain       = aws_route53_record.cloudfront.name
+  login_uri          = var.login_uri_path != null ? format("https://%s/%s", local.login_domain, trimprefix(var.login_uri_path, "/")) : "https://${local.login_domain}/"
+  okta_groups        = var.authentication ? var.okta_groups : []
+  redirect_uri       = "https://${local.login_domain}/${trimprefix(var.redirect_uri_path, "/")}"
+  ssm_prefix         = "/cloudfront-config/${aws_cloudfront_distribution.default.id}"
 }
 
 resource "aws_kms_key" "default" {
@@ -62,7 +62,7 @@ data "aws_iam_policy_document" "authentication" {
 
 module "authentication" {
   providers = { aws.lambda = aws.cloudfront }
-  count     = local.auth_lambda
+  count     = length(local.create_auth_lambda)
   source    = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=v0.1.23"
   name      = "${var.name}-authentication"
   filename  = "${path.module}/auth_lambda/artifacts/index.zip"
@@ -106,13 +106,13 @@ resource "okta_app_group_assignment" "default" {
 }
 
 resource "tls_private_key" "default" {
-  count     = local.auth_lambda
+  count     = length(local.create_auth_lambda)
   algorithm = "RSA"
 }
 
 resource "aws_ssm_parameter" "client_id" {
   provider = aws.cloudfront
-  count    = local.auth_lambda
+  count    = length(local.create_auth_lambda)
   name     = "${local.ssm_prefix}/client_id"
   type     = "SecureString"
   value    = okta_app_oauth.default[0].client_id
@@ -122,7 +122,7 @@ resource "aws_ssm_parameter" "client_id" {
 
 resource "aws_ssm_parameter" "client_secret" {
   provider = aws.cloudfront
-  count    = local.auth_lambda
+  count    = length(local.create_auth_lambda)
   name     = "${local.ssm_prefix}/client_secret"
   type     = "SecureString"
   value    = okta_app_oauth.default[0].client_secret
@@ -132,7 +132,7 @@ resource "aws_ssm_parameter" "client_secret" {
 
 resource "aws_ssm_parameter" "okta_org_name" {
   provider = aws.cloudfront
-  count    = local.auth_lambda
+  count    = length(local.create_auth_lambda)
   name     = "${local.ssm_prefix}/okta_org_name"
   type     = "String"
   value    = var.okta_org_name
@@ -141,7 +141,7 @@ resource "aws_ssm_parameter" "okta_org_name" {
 
 resource "aws_ssm_parameter" "private_key" {
   provider = aws.cloudfront
-  count    = local.auth_lambda
+  count    = length(local.create_auth_lambda)
   name     = "${local.ssm_prefix}/private_key"
   type     = "SecureString"
   value    = tls_private_key.default[0].private_key_pem
@@ -151,7 +151,7 @@ resource "aws_ssm_parameter" "private_key" {
 
 resource "aws_ssm_parameter" "public_key" {
   provider = aws.cloudfront
-  count    = local.auth_lambda
+  count    = length(local.create_auth_lambda)
   name     = "${local.ssm_prefix}/public_key"
   type     = "SecureString"
   value    = tls_private_key.default[0].public_key_pem
@@ -161,7 +161,7 @@ resource "aws_ssm_parameter" "public_key" {
 
 resource "aws_ssm_parameter" "redirect_uri" {
   provider = aws.cloudfront
-  count    = local.auth_lambda
+  count    = length(local.create_auth_lambda)
   name     = "${local.ssm_prefix}/redirect_uri"
   type     = "String"
   value    = local.redirect_uri
@@ -170,7 +170,7 @@ resource "aws_ssm_parameter" "redirect_uri" {
 
 resource "aws_ssm_parameter" "cookie_domain" {
   provider = aws.cloudfront
-  count    = local.auth_lambda
+  count    = length(local.create_auth_lambda)
   name     = "${local.ssm_prefix}/cookie_domain"
   type     = "String"
   value    = local.cookie_domain

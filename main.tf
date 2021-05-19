@@ -103,7 +103,7 @@ resource "aws_cloudfront_distribution" "default" {
     max_ttl                = var.max_ttl
 
     dynamic "lambda_function_association" {
-      for_each = var.authentication && !var.okta_spa ? ["create"] : []
+      for_each = local.create_auth_lambda
 
       content {
         event_type = "viewer-request"
