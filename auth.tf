@@ -86,7 +86,7 @@ resource "okta_app_oauth" "default" {
   hide_web                   = var.hide_web
   login_uri                  = local.login_uri
   login_mode                 = var.okta_spa ? "DISABLED" : "SPEC"
-  login_scopes               = ["openid", "profile", "email", "groups"]
+  login_scopes               = ["openid", "profile", "email"]
   redirect_uris              = [local.redirect_uri]
   response_types             = ["token", "id_token", "code"]
   token_endpoint_auth_method = var.okta_spa ? "none" : "client_secret_jwt"
