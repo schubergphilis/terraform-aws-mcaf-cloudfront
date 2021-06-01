@@ -27,7 +27,7 @@ data "aws_iam_policy_document" "origin_bucket" {
     }
   }
 
-  dynamic statement {
+  dynamic "statement" {
     for_each = local.deployment_arn
 
     content {

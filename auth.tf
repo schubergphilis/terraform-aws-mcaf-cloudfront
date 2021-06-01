@@ -98,10 +98,6 @@ resource "okta_app_group_assignment" "default" {
 
   app_id   = okta_app_oauth.default[0].id
   group_id = each.value
-
-  lifecycle {
-    ignore_changes = [priority]
-  }
 }
 
 resource "tls_private_key" "default" {
