@@ -5,7 +5,7 @@ variable "name" {
 
 variable "additional_redirect_uris" {
   type        = list(string)
-  default     = []
+  default     = null
   description = "Additional login redirect URLs"
 }
 
