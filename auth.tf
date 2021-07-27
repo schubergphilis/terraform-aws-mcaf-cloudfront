@@ -116,7 +116,7 @@ resource "aws_ssm_parameter" "client_id" {
   name     = "${local.ssm_prefix}/client_id"
   type     = "SecureString"
   value    = okta_app_oauth.default[0].client_id
-  key_id   = aws_kms_key.default.id
+  key_id   = "alias/aws/ssm"
   tags     = var.tags
 }
 
@@ -126,7 +126,7 @@ resource "aws_ssm_parameter" "client_secret" {
   name     = "${local.ssm_prefix}/client_secret"
   type     = "SecureString"
   value    = okta_app_oauth.default[0].client_secret
-  key_id   = aws_kms_key.default.id
+  key_id   = "alias/aws/ssm"
   tags     = var.tags
 }
 
@@ -145,7 +145,7 @@ resource "aws_ssm_parameter" "private_key" {
   name     = "${local.ssm_prefix}/private_key"
   type     = "SecureString"
   value    = tls_private_key.default[0].private_key_pem
-  key_id   = aws_kms_key.default.id
+  key_id   = "alias/aws/ssm"
   tags     = var.tags
 }
 
@@ -155,7 +155,7 @@ resource "aws_ssm_parameter" "public_key" {
   name     = "${local.ssm_prefix}/public_key"
   type     = "SecureString"
   value    = tls_private_key.default[0].public_key_pem
-  key_id   = aws_kms_key.default.id
+  key_id   = "alias/aws/ssm"
   tags     = var.tags
 }
 
