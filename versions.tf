@@ -5,7 +5,8 @@ terraform {
       configuration_aliases = [aws.cloudfront]
     }
     okta = {
-      source = "okta/okta"
+      source  = "okta/okta"
+      version = ">= 3.16.0"
     }
     tls = {
       source = "hashicorp/tls"
