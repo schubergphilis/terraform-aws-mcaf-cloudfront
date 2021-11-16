@@ -24,7 +24,7 @@ variable "allowed_methods" {
 variable "application_logo" {
   type        = string
   default     = null
-  description = "Local path to the application logo image"
+  description = "Relative path to the application logo image"
 }
 
 variable "authentication" {
