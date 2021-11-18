@@ -21,6 +21,12 @@ variable "allowed_methods" {
   description = "Controls which HTTP methods CloudFront processes and forwards"
 }
 
+variable "application_logo" {
+  type        = string
+  default     = null
+  description = "Relative path to the application logo image"
+}
+
 variable "authentication" {
   type        = bool
   default     = false
