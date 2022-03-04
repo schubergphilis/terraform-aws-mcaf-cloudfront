@@ -1,5 +1,9 @@
+locals {
+  bucket_policy = var.bucket_policy != null ? [var.bucket_policy] : null
+}
+
 data "aws_iam_policy_document" "origin_bucket" {
-  source_json = var.bucket_policy
+  source_policy_documents = local.bucket_policy
 
   statement {
     actions = [
