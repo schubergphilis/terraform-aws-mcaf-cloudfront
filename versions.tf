@@ -3,6 +3,7 @@ terraform {
     aws = {
       source                = "hashicorp/aws"
       configuration_aliases = [aws.cloudfront]
+      version               = ">= 4.0.0"
     }
     okta = {
       source  = "okta/okta"
