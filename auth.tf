@@ -40,7 +40,7 @@ data "aws_iam_policy_document" "authentication" {
 module "authentication" {
   providers = { aws.lambda = aws.cloudfront }
   count     = length(local.create_auth_lambda)
-  source    = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=v0.2.1"
+  source    = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=v0.3.3"
   name      = "${var.name}-authentication"
   filename  = "${path.module}/auth_lambda/artifacts/index.zip"
   runtime   = "nodejs14.x"
@@ -64,11 +64,9 @@ resource "okta_app_oauth" "default" {
   logo                       = var.application_logo
   redirect_uris              = concat([local.redirect_uri], coalesce(var.additional_redirect_uris, []))
   response_types             = ["token", "id_token", "code"]
+  skip_groups                = true
+  skip_users                 = true
   token_endpoint_auth_method = var.okta_spa ? "none" : "client_secret_jwt"
-
-  lifecycle {
-    ignore_changes = [users, groups, consent_method]
-  }
 }
 
 resource "okta_app_group_assignment" "default" {
