@@ -62,6 +62,7 @@ resource "okta_app_oauth" "default" {
   login_uri                  = local.login_uri
   login_mode                 = "SPEC"
   logo                       = var.application_logo
+  pkce_required              = var.okta_spa ? true : false
   redirect_uris              = concat([local.redirect_uri], coalesce(var.additional_redirect_uris, []))
   response_types             = ["token", "id_token", "code"]
   skip_groups                = true
