@@ -42,7 +42,7 @@
 | [aws_ssm_parameter.private_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [aws_ssm_parameter.public_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [aws_ssm_parameter.redirect_uri](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
-| [okta_app_group_assignment.default](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/app_group_assignment) | resource |
+| [okta_app_group_assignments.default](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/app_group_assignments) | resource |
 | [okta_app_oauth.default](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/app_oauth) | resource |
 | [tls_private_key.default](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key) | resource |
 | [aws_iam_policy_document.authentication](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
