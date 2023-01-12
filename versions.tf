@@ -7,7 +7,7 @@ terraform {
     }
     okta = {
       source  = "okta/okta"
-      version = ">= 3.36.0"
+      version = ">= 3.38.0"
     }
     tls = {
       source = "hashicorp/tls"
