@@ -7,7 +7,7 @@
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0.0 |
-| <a name="requirement_okta"></a> [okta](#requirement\_okta) | >= 3.36.0 |
+| <a name="requirement_okta"></a> [okta](#requirement\_okta) | >= 3.38.0 |
 
 ## Providers
 
@@ -15,7 +15,7 @@
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0.0 |
 | <a name="provider_aws.cloudfront"></a> [aws.cloudfront](#provider\_aws.cloudfront) | >= 4.0.0 |
-| <a name="provider_okta"></a> [okta](#provider\_okta) | >= 3.36.0 |
+| <a name="provider_okta"></a> [okta](#provider\_okta) | >= 3.38.0 |
 | <a name="provider_tls"></a> [tls](#provider\_tls) | n/a |
 
 ## Modules
