@@ -70,14 +70,16 @@ resource "okta_app_oauth" "default" {
   token_endpoint_auth_method = var.okta_spa ? "none" : "client_secret_jwt"
 }
 
-resource "okta_app_group_assignment" "default" {
-  for_each = toset(local.okta_groups)
+resource "okta_app_group_assignments" "default" {
+  count  = var.authentication ? 1 : 0
+  app_id = okta_app_oauth.default[0].id
 
-  app_id   = okta_app_oauth.default[0].id
-  group_id = each.value
+  dynamic "group" {
+    for_each = toset(local.okta_groups)
 
-  lifecycle {
-    ignore_changes = [priority]
+    content {
+      id = group.value
+    }
   }
 }
 
