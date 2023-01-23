@@ -122,6 +122,26 @@ variable "custom_error_response" {
   description = "List of one or more custom error response elements"
 }
 
+variable "custom_header" {
+  type = object({
+    name  = string
+    value = string
+  })
+  default     = null
+  description = "Map of strings that contains a custom header to be provided by Cloudfront when using an ELB backend"
+}
+
+variable "custom_origin_config" {
+  type = object({
+    http_port              = number
+    https_port             = number
+    origin_protocol_policy = string
+    origin_ssl_protocols   = list(string)
+  })
+  default     = null
+  description = "Used to configure a custom header when directing traffic to ELBs"
+}
+
 variable "default_root_object" {
   type        = string
   default     = "index.html"
@@ -144,6 +164,12 @@ variable "enabled" {
   type        = bool
   default     = true
   description = "Whether the distribution is enabled to accept requests for content"
+}
+
+variable "endpoint_type" {
+  type        = string
+  default     = "s3"
+  description = "Type of endpoint where this distribution is used for. E.g. `s3` or `elb`"
 }
 
 variable "force_destroy" {
@@ -296,6 +322,7 @@ variable "restrict_public_buckets" {
 
 variable "subdomain" {
   type        = string
+  default     = null
   description = "A DNS subdomain for this distribution"
 }
 
@@ -319,6 +346,7 @@ variable "wait_for_deployment" {
 
 variable "zone_id" {
   type        = string
+  default     = null
   description = "ID of the Route53 zone in which to create the subdomain record"
 }
 

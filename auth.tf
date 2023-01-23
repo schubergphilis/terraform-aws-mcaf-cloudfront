@@ -1,7 +1,7 @@
 locals {
   cookie_domain      = var.cookie_domain != null ? var.cookie_domain : local.login_domain
   create_auth_lambda = var.authentication && !var.okta_spa ? ["create"] : []
-  login_domain       = aws_route53_record.cloudfront.name
+  login_domain       = try(aws_route53_record.cloudfront[0].name, "")
   login_uri          = var.login_uri_path != null ? format("https://%s/%s", local.login_domain, trimprefix(var.login_uri_path, "/")) : "https://${local.login_domain}/"
   okta_groups        = var.authentication ? var.okta_groups : []
   redirect_uri       = "https://${local.login_domain}/${trimprefix(var.redirect_uri_path, "/")}"

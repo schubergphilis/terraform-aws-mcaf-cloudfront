@@ -1,12 +1,14 @@
 locals {
-  application_fqdn  = replace("${var.subdomain}.${data.aws_route53_zone.current.name}", "/[.]$/", "")
+  application_fqdn  = var.subdomain != null ? replace("${var.subdomain}.${data.aws_route53_zone.current.name}", "/[.]$/", "") : null
   certificate_arn   = var.certificate_arn != null ? var.certificate_arn : aws_acm_certificate.default.0.arn
   certificate_count = var.certificate_arn == null ? 1 : 0
   deployment_arn    = var.deployment_arn != null ? { create : null } : {}
 
+  endpoint_type = var.endpoint_type
+
   domain_name = var.use_regional_endpoint ? format(
-    "%s.s3-%s.amazonaws.com", var.name, data.aws_region.current.name
-  ) : "${var.name}.s3.amazonaws.com"
+    "%s.%s-%s.amazonaws.com", var.name, var.endpoint_type, data.aws_region.current.name
+  ) : format("${var.name}.%s.amazonaws.com", var.endpoint_type)
 }
 
 data "aws_region" "current" {}
@@ -16,6 +18,7 @@ data "aws_route53_zone" "current" {
 }
 
 resource "aws_route53_record" "cloudfront" {
+  count   = local.application_fqdn != null ? 1 : 0
   zone_id = var.zone_id
   name    = local.application_fqdn
   type    = "CNAME"
@@ -52,11 +55,12 @@ resource "aws_acm_certificate_validation" "default" {
 }
 
 resource "aws_cloudfront_origin_access_identity" "default" {
+  count   = var.endpoint_type == "s3" ? 1 : 0
   comment = var.name
 }
 
 resource "aws_cloudfront_distribution" "default" {
-  aliases             = distinct(compact(concat(var.aliases, [local.application_fqdn])))
+  aliases             = local.application_fqdn != null ? distinct(compact(concat(var.aliases, [local.application_fqdn]))) : null
   comment             = var.comment
   default_root_object = var.default_root_object
   enabled             = var.enabled
@@ -70,8 +74,30 @@ resource "aws_cloudfront_distribution" "default" {
     origin_id   = var.name
     origin_path = var.origin_path
 
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.default.cloudfront_access_identity_path
+    dynamic "s3_origin_config" {
+      for_each = var.endpoint_type == "s3" ? { enable = true } : {}
+      content {
+        origin_access_identity = aws_cloudfront_origin_access_identity.default.cloudfront_access_identity_path
+      }
+    }
+
+    dynamic "custom_header" {
+      for_each = var.custom_header
+
+      content {
+        name  = custom_header.value["name"]
+        value = custom_header.value["value"]
+      }
+    }
+
+    dynamic "custom_origin_config" {
+      for_each = var.custom_origin_config
+      content {
+        http_port              = custom_origin_config.value["http_port"]
+        https_port             = custom_origin_config.value["https_port"]
+        origin_protocol_policy = custom_origin_config.value["origin_protocol_policy"]
+        origin_ssl_protocols   = custom_origin_config.value["origin_ssl_protocols"]
+      }
     }
   }
 

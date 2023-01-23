@@ -14,7 +14,7 @@ data "aws_iam_policy_document" "origin_bucket" {
     ]
     principals {
       type        = "AWS"
-      identifiers = [aws_cloudfront_origin_access_identity.default.iam_arn]
+      identifiers = [aws_cloudfront_origin_access_identity.default[0].iam_arn]
     }
   }
 
@@ -27,7 +27,7 @@ data "aws_iam_policy_document" "origin_bucket" {
     ]
     principals {
       type        = "AWS"
-      identifiers = [aws_cloudfront_origin_access_identity.default.iam_arn]
+      identifiers = [aws_cloudfront_origin_access_identity.default[0].iam_arn]
     }
   }
 
