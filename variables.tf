@@ -260,7 +260,7 @@ variable "okta_org_name" {
 
 variable "okta_groups" {
   type        = list(string)
-  default     = null
+  default     = []
   description = "The default groups assigned to the Okta OIDC application"
 }
 
