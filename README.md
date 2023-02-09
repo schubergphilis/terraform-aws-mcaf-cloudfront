@@ -98,7 +98,7 @@
 | <a name="input_min_ttl"></a> [min\_ttl](#input\_min\_ttl) | Minimum amount of time that you want objects to stay in CloudFront caches | `number` | `0` | no |
 | <a name="input_minimum_protocol_version"></a> [minimum\_protocol\_version](#input\_minimum\_protocol\_version) | The minimum version of the SSL protocol that you want CloudFront to use for HTTPS connections | `string` | `"TLSv1.1_2016"` | no |
 | <a name="input_okta_app_name"></a> [okta\_app\_name](#input\_okta\_app\_name) | The Okta OIDC application name | `string` | `null` | no |
-| <a name="input_okta_groups"></a> [okta\_groups](#input\_okta\_groups) | The default groups assigned to the Okta OIDC application | `list(string)` | `null` | no |
+| <a name="input_okta_groups"></a> [okta\_groups](#input\_okta\_groups) | The default groups assigned to the Okta OIDC application | `list(string)` | `[]` | no |
 | <a name="input_okta_org_name"></a> [okta\_org\_name](#input\_okta\_org\_name) | The Okta organization for the OIDC application | `string` | `null` | no |
 | <a name="input_okta_spa"></a> [okta\_spa](#input\_okta\_spa) | Set to true if this is a single page web application | `bool` | `false` | no |
 | <a name="input_origin_path"></a> [origin\_path](#input\_origin\_path) | A path that CloudFront uses to request your content from a specific directory | `string` | `""` | no |
