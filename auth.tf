@@ -71,7 +71,7 @@ resource "okta_app_oauth" "default" {
 }
 
 resource "okta_app_group_assignments" "default" {
-  count  = var.authentication ? 1 : 0
+  count  = length(local.okta_groups) > 0 ? 1 : 0
   app_id = okta_app_oauth.default[0].id
 
   dynamic "group" {
