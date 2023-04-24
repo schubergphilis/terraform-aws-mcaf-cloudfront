@@ -23,7 +23,7 @@
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_authentication"></a> [authentication](#module\_authentication) | github.com/schubergphilis/terraform-aws-mcaf-lambda | v0.3.3 |
-| <a name="module_origin_bucket"></a> [origin\_bucket](#module\_origin\_bucket) | github.com/schubergphilis/terraform-aws-mcaf-s3 | v0.6.1 |
+| <a name="module_origin_bucket"></a> [origin\_bucket](#module\_origin\_bucket) | github.com/schubergphilis/terraform-aws-mcaf-s3 | v0.8.0 |
 
 ## Resources
 
