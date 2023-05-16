@@ -33,6 +33,12 @@ variable "authentication" {
   description = "Whether to protect the cloudfront distribution behind an Okta application"
 }
 
+variable "authentication_policy" {
+  type        = string
+  default     = null
+  description = "The authentication policy to assign to the Okta app"
+}
+
 variable "bucket_policy" {
   type        = string
   default     = null
