@@ -56,6 +56,7 @@ resource "okta_app_oauth" "default" {
   status                     = "ACTIVE"
   type                       = var.okta_spa ? "browser" : "web"
   consent_method             = var.okta_spa ? "REQUIRED" : "TRUSTED"
+  authentication_policy      = var.authentication_policy
   grant_types                = ["authorization_code", "implicit"]
   hide_ios                   = var.hide_ios
   hide_web                   = var.hide_web
