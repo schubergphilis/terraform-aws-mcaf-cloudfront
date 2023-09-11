@@ -33,6 +33,12 @@ variable "authentication" {
   description = "Whether to protect the cloudfront distribution behind an Okta application"
 }
 
+variable "bucket_lifecycle_rule" {
+  type        = any
+  default     = []
+  description = "List of maps containing lifecycle management configuration settings for this bucket"
+}
+
 variable "bucket_policy" {
   type        = string
   default     = null
