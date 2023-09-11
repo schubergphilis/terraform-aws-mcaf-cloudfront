@@ -7,7 +7,7 @@
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0.0 |
-| <a name="requirement_okta"></a> [okta](#requirement\_okta) | 3.46.0 |
+| <a name="requirement_okta"></a> [okta](#requirement\_okta) | >= 4.0.0 |
 
 ## Providers
 
@@ -15,7 +15,7 @@
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0.0 |
 | <a name="provider_aws.cloudfront"></a> [aws.cloudfront](#provider\_aws.cloudfront) | >= 4.0.0 |
-| <a name="provider_okta"></a> [okta](#provider\_okta) | 3.46.0 |
+| <a name="provider_okta"></a> [okta](#provider\_okta) | >= 4.0.0 |
 | <a name="provider_tls"></a> [tls](#provider\_tls) | n/a |
 
 ## Modules
@@ -23,7 +23,7 @@
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_authentication"></a> [authentication](#module\_authentication) | github.com/schubergphilis/terraform-aws-mcaf-lambda | v0.3.3 |
-| <a name="module_origin_bucket"></a> [origin\_bucket](#module\_origin\_bucket) | github.com/schubergphilis/terraform-aws-mcaf-s3 | v0.8.0 |
+| <a name="module_origin_bucket"></a> [origin\_bucket](#module\_origin\_bucket) | github.com/schubergphilis/terraform-aws-mcaf-s3 | v0.10.1 |
 
 ## Resources
 
@@ -42,8 +42,8 @@
 | [aws_ssm_parameter.private_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [aws_ssm_parameter.public_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [aws_ssm_parameter.redirect_uri](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
-| [okta_app_group_assignments.default](https://registry.terraform.io/providers/okta/okta/3.46.0/docs/resources/app_group_assignments) | resource |
-| [okta_app_oauth.default](https://registry.terraform.io/providers/okta/okta/3.46.0/docs/resources/app_oauth) | resource |
+| [okta_app_group_assignments.default](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/app_group_assignments) | resource |
+| [okta_app_oauth.default](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/app_oauth) | resource |
 | [tls_private_key.default](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key) | resource |
 | [aws_iam_policy_document.authentication](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.origin_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
@@ -65,6 +65,7 @@
 | <a name="input_authentication"></a> [authentication](#input\_authentication) | Whether to protect the cloudfront distribution behind an Okta application | `bool` | `false` | no |
 | <a name="input_block_public_acls"></a> [block\_public\_acls](#input\_block\_public\_acls) | Whether Amazon S3 should block public ACLs for this bucket | `bool` | `true` | no |
 | <a name="input_block_public_policy"></a> [block\_public\_policy](#input\_block\_public\_policy) | Whether Amazon S3 should block public bucket policies for this bucket | `bool` | `true` | no |
+| <a name="input_bucket_lifecycle_rule"></a> [bucket\_lifecycle\_rule](#input\_bucket\_lifecycle\_rule) | List of maps containing lifecycle management configuration settings for this bucket | `any` | `[]` | no |
 | <a name="input_bucket_policy"></a> [bucket\_policy](#input\_bucket\_policy) | The bucket policy to merge with the Cloudfront permissions | `string` | `null` | no |
 | <a name="input_cached_methods"></a> [cached\_methods](#input\_cached\_methods) | Controls whether CloudFront caches the response to requests | `list(string)` | <pre>[<br>  "GET",<br>  "HEAD"<br>]</pre> | no |
 | <a name="input_certificate_arn"></a> [certificate\_arn](#input\_certificate\_arn) | The ARN of the AWS Certificate Manager certificate that you wish to use with this distribution | `string` | `null` | no |
