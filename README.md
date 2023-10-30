@@ -22,8 +22,8 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_authentication"></a> [authentication](#module\_authentication) | github.com/schubergphilis/terraform-aws-mcaf-lambda | v0.3.3 |
-| <a name="module_origin_bucket"></a> [origin\_bucket](#module\_origin\_bucket) | github.com/schubergphilis/terraform-aws-mcaf-s3 | v0.10.1 |
+| <a name="module_authentication"></a> [authentication](#module\_authentication) | github.com/schubergphilis/terraform-aws-mcaf-lambda | v1.1.1 |
+| <a name="module_origin_bucket"></a> [origin\_bucket](#module\_origin\_bucket) | github.com/schubergphilis/terraform-aws-mcaf-s3 | v0.11.0 |
 
 ## Resources
 
@@ -45,6 +45,8 @@
 | [okta_app_group_assignments.default](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/app_group_assignments) | resource |
 | [okta_app_oauth.default](https://registry.terraform.io/providers/okta/okta/latest/docs/resources/app_oauth) | resource |
 | [tls_private_key.default](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key) | resource |
+| [aws_cloudfront_cache_policy.default_cache_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/cloudfront_cache_policy) | data source |
+| [aws_cloudfront_cache_policy.root_object_cache_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/cloudfront_cache_policy) | data source |
 | [aws_iam_policy_document.authentication](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.origin_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
@@ -66,7 +68,9 @@
 | <a name="input_block_public_acls"></a> [block\_public\_acls](#input\_block\_public\_acls) | Whether Amazon S3 should block public ACLs for this bucket | `bool` | `true` | no |
 | <a name="input_block_public_policy"></a> [block\_public\_policy](#input\_block\_public\_policy) | Whether Amazon S3 should block public bucket policies for this bucket | `bool` | `true` | no |
 | <a name="input_bucket_lifecycle_rule"></a> [bucket\_lifecycle\_rule](#input\_bucket\_lifecycle\_rule) | List of maps containing lifecycle management configuration settings for this bucket | `any` | `[]` | no |
+| <a name="input_bucket_logging"></a> [bucket\_logging](#input\_bucket\_logging) | Logging configuration, logging is disabled by default | <pre>object({<br>    target_bucket = string<br>    target_prefix = string<br>  })</pre> | `null` | no |
 | <a name="input_bucket_policy"></a> [bucket\_policy](#input\_bucket\_policy) | The bucket policy to merge with the Cloudfront permissions | `string` | `null` | no |
+| <a name="input_cache_policy"></a> [cache\_policy](#input\_cache\_policy) | The name of the cache policy that is attached to the (default) cache behavior | `string` | `"Managed-CachingOptimized"` | no |
 | <a name="input_cached_methods"></a> [cached\_methods](#input\_cached\_methods) | Controls whether CloudFront caches the response to requests | `list(string)` | <pre>[<br>  "GET",<br>  "HEAD"<br>]</pre> | no |
 | <a name="input_certificate_arn"></a> [certificate\_arn](#input\_certificate\_arn) | The ARN of the AWS Certificate Manager certificate that you wish to use with this distribution | `string` | `null` | no |
 | <a name="input_comment"></a> [comment](#input\_comment) | Any comments you want to include about the distribution | `string` | `null` | no |
@@ -79,13 +83,10 @@
 | <a name="input_cors_max_age_seconds"></a> [cors\_max\_age\_seconds](#input\_cors\_max\_age\_seconds) | Specifies time (in seconds) the browser can cache the response for a preflight request | `number` | `3600` | no |
 | <a name="input_custom_error_response"></a> [custom\_error\_response](#input\_custom\_error\_response) | List of one or more custom error response elements | <pre>list(object({<br>    error_caching_min_ttl = string<br>    error_code            = string<br>    response_code         = string<br>    response_page_path    = string<br>  }))</pre> | `[]` | no |
 | <a name="input_default_root_object"></a> [default\_root\_object](#input\_default\_root\_object) | The object that you want CloudFront to return | `string` | `"index.html"` | no |
-| <a name="input_default_ttl"></a> [default\_ttl](#input\_default\_ttl) | Default amount of time (in seconds) that an object is in a CloudFront cache | `number` | `3600` | no |
+| <a name="input_default_root_object_cache_policy"></a> [default\_root\_object\_cache\_policy](#input\_default\_root\_object\_cache\_policy) | The caching policy for the root object. | `string` | `"Managed-CachingDisabled"` | no |
 | <a name="input_deployment_arn"></a> [deployment\_arn](#input\_deployment\_arn) | A resource ARN that can be used to deploy content to the origin bucket | `string` | `null` | no |
 | <a name="input_enabled"></a> [enabled](#input\_enabled) | Whether the distribution is enabled to accept requests for content | `bool` | `true` | no |
 | <a name="input_force_destroy"></a> [force\_destroy](#input\_force\_destroy) | A boolean indicating all resources (and their data) should be deleted on destroy | `bool` | `false` | no |
-| <a name="input_forward_cookies"></a> [forward\_cookies](#input\_forward\_cookies) | Specifies whether you want CloudFront to forward cookies | `string` | `"none"` | no |
-| <a name="input_forward_headers"></a> [forward\_headers](#input\_forward\_headers) | Specifies the headers you want CloudFront to vary upon for this cache behavior | `list(string)` | <pre>[<br>  "Access-Control-Request-Headers",<br>  "Access-Control-Request-Method",<br>  "Origin"<br>]</pre> | no |
-| <a name="input_forward_query_strings"></a> [forward\_query\_strings](#input\_forward\_query\_strings) | Specifies whether you want CloudFront to forward query strings | `bool` | `false` | no |
 | <a name="input_geo_restriction_locations"></a> [geo\_restriction\_locations](#input\_geo\_restriction\_locations) | The country codes for which you want CloudFront to whitelist or blacklist your content | `list(string)` | `null` | no |
 | <a name="input_geo_restriction_type"></a> [geo\_restriction\_type](#input\_geo\_restriction\_type) | The method that you want to use to restrict distribution of your content by country | `string` | `"none"` | no |
 | <a name="input_hide_ios"></a> [hide\_ios](#input\_hide\_ios) | Do not display the Okta application icon to users on mobile app | `bool` | `false` | no |
@@ -95,8 +96,6 @@
 | <a name="input_lambda_function_association"></a> [lambda\_function\_association](#input\_lambda\_function\_association) | A config block that triggers a lambda function with specific actions | <pre>list(object({<br>    event_type   = string<br>    include_body = bool<br>    lambda_arn   = string<br>  }))</pre> | `[]` | no |
 | <a name="input_logging"></a> [logging](#input\_logging) | Enables logging for this distribution | `bool` | `true` | no |
 | <a name="input_login_uri_path"></a> [login\_uri\_path](#input\_login\_uri\_path) | Optional path to the login URL | `string` | `null` | no |
-| <a name="input_max_ttl"></a> [max\_ttl](#input\_max\_ttl) | Maximum amount of time (in seconds) that an object is in a CloudFront cache | `number` | `86400` | no |
-| <a name="input_min_ttl"></a> [min\_ttl](#input\_min\_ttl) | Minimum amount of time that you want objects to stay in CloudFront caches | `number` | `0` | no |
 | <a name="input_minimum_protocol_version"></a> [minimum\_protocol\_version](#input\_minimum\_protocol\_version) | The minimum version of the SSL protocol that you want CloudFront to use for HTTPS connections | `string` | `"TLSv1.1_2016"` | no |
 | <a name="input_okta_app_name"></a> [okta\_app\_name](#input\_okta\_app\_name) | The Okta OIDC application name | `string` | `null` | no |
 | <a name="input_okta_groups"></a> [okta\_groups](#input\_okta\_groups) | The default groups assigned to the Okta OIDC application | `list(string)` | `[]` | no |
