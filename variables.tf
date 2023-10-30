@@ -39,6 +39,15 @@ variable "bucket_lifecycle_rule" {
   description = "List of maps containing lifecycle management configuration settings for this bucket"
 }
 
+variable "bucket_logging" {
+  type = object({
+    target_bucket = string
+    target_prefix = string
+  })
+  default     = null
+  description = "Logging configuration, logging is disabled by default"
+}
+
 variable "bucket_policy" {
   type        = string
   default     = null
