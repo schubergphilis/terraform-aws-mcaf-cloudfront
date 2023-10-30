@@ -55,6 +55,10 @@ resource "aws_cloudfront_origin_access_identity" "default" {
   comment = var.name
 }
 
+data "aws_cloudfront_cache_policy" "default_cache_policy" {
+  name = var.cache_policy
+}
+
 resource "aws_cloudfront_distribution" "default" {
   aliases             = distinct(compact(concat(var.aliases, [local.application_fqdn])))
   comment             = var.comment
@@ -84,23 +88,12 @@ resource "aws_cloudfront_distribution" "default" {
 
   default_cache_behavior {
     allowed_methods  = var.allowed_methods
+    cache_policy_id  = data.aws_cloudfront_cache_policy.default_cache_policy.id
     cached_methods   = var.cached_methods
-    target_origin_id = var.name
     compress         = var.compress
-
-    forwarded_values {
-      query_string = var.forward_query_strings
-      headers      = var.forward_headers
-
-      cookies {
-        forward = var.forward_cookies
-      }
-    }
+    target_origin_id = var.name
 
     viewer_protocol_policy = var.viewer_protocol_policy
-    default_ttl            = var.default_ttl
-    min_ttl                = var.min_ttl
-    max_ttl                = var.max_ttl
 
     dynamic "lambda_function_association" {
       for_each = local.create_auth_lambda

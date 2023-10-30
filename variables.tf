@@ -72,6 +72,12 @@ variable "cached_methods" {
   description = "Controls whether CloudFront caches the response to requests"
 }
 
+variable "cache_policy" {
+  type        = string
+  default     = "Managed-CachingOptimized"
+  description = "The name of the cache policy that is attached to the (default) cache behavior"
+}
+
 variable "certificate_arn" {
   type        = string
   default     = null
@@ -143,12 +149,6 @@ variable "default_root_object" {
   description = "The object that you want CloudFront to return"
 }
 
-variable "default_ttl" {
-  type        = number
-  default     = 3600
-  description = "Default amount of time (in seconds) that an object is in a CloudFront cache"
-}
-
 variable "deployment_arn" {
   type        = string
   default     = null
@@ -165,24 +165,6 @@ variable "force_destroy" {
   type        = bool
   default     = false
   description = "A boolean indicating all resources (and their data) should be deleted on destroy"
-}
-
-variable "forward_cookies" {
-  type        = string
-  default     = "none"
-  description = "Specifies whether you want CloudFront to forward cookies"
-}
-
-variable "forward_headers" {
-  type        = list(string)
-  default     = ["Access-Control-Request-Headers", "Access-Control-Request-Method", "Origin"]
-  description = "Specifies the headers you want CloudFront to vary upon for this cache behavior"
-}
-
-variable "forward_query_strings" {
-  type        = bool
-  default     = false
-  description = "Specifies whether you want CloudFront to forward query strings "
 }
 
 variable "geo_restriction_type" {
@@ -247,18 +229,6 @@ variable "minimum_protocol_version" {
   type        = string
   default     = "TLSv1.1_2016"
   description = "The minimum version of the SSL protocol that you want CloudFront to use for HTTPS connections"
-}
-
-variable "max_ttl" {
-  type        = number
-  default     = 86400
-  description = "Maximum amount of time (in seconds) that an object is in a CloudFront cache"
-}
-
-variable "min_ttl" {
-  type        = number
-  default     = 0
-  description = "Minimum amount of time that you want objects to stay in CloudFront caches"
 }
 
 variable "okta_app_name" {
