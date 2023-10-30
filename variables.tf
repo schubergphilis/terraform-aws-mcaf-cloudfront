@@ -149,6 +149,12 @@ variable "default_root_object" {
   description = "The object that you want CloudFront to return"
 }
 
+variable "default_root_object_cache_policy" {
+  type        = string
+  default     = "Managed-CachingDisabled"
+  description = "The caching policy for the root object."
+}
+
 variable "deployment_arn" {
   type        = string
   default     = null

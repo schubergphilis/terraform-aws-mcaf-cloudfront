@@ -59,6 +59,10 @@ data "aws_cloudfront_cache_policy" "default_cache_policy" {
   name = var.cache_policy
 }
 
+data "aws_cloudfront_cache_policy" "root_object_cache_policy" {
+  name = var.default_root_object_cache_policy
+}
+
 resource "aws_cloudfront_distribution" "default" {
   aliases             = distinct(compact(concat(var.aliases, [local.application_fqdn])))
   comment             = var.comment
@@ -89,6 +93,37 @@ resource "aws_cloudfront_distribution" "default" {
   default_cache_behavior {
     allowed_methods  = var.allowed_methods
     cache_policy_id  = data.aws_cloudfront_cache_policy.default_cache_policy.id
+    cached_methods   = var.cached_methods
+    compress         = var.compress
+    target_origin_id = var.name
+
+    viewer_protocol_policy = var.viewer_protocol_policy
+
+    dynamic "lambda_function_association" {
+      for_each = local.create_auth_lambda
+
+      content {
+        event_type = "viewer-request"
+        lambda_arn = module.authentication[0].qualified_arn
+      }
+    }
+
+    dynamic "lambda_function_association" {
+      for_each = var.lambda_function_association
+
+      content {
+        event_type   = lambda_function_association.value.event_type
+        include_body = lookup(lambda_function_association.value, "include_body", null)
+        lambda_arn   = lambda_function_association.value.lambda_arn
+      }
+    }
+  }
+
+  # Set specific cache policy for the root object
+  ordered_cache_behavior {
+    path_pattern     = var.default_root_object
+    allowed_methods  = var.allowed_methods
+    cache_policy_id  = data.aws_cloudfront_cache_policy.root_object_cache_policy.id
     cached_methods   = var.cached_methods
     compress         = var.compress
     target_origin_id = var.name

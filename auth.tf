@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "authentication" {
 }
 
 module "authentication" {
-  providers = { aws.lambda = aws.cloudfront }
+  providers = { aws = aws.cloudfront }
   count     = length(local.create_auth_lambda)
   source    = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=v1.1.1"
   name      = "${var.name}-authentication"
