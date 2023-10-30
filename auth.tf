@@ -43,7 +43,7 @@ module "authentication" {
   source    = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=v1.1.1"
   name      = "${var.name}-authentication"
   filename  = "${path.module}/auth_lambda/artifacts/index.zip"
-  runtime   = "nodejs14.x"
+  runtime   = "nodejs18.x"
   handler   = "index.handler"
   policy    = data.aws_iam_policy_document.authentication.json
   publish   = true
