@@ -18,9 +18,13 @@ data "aws_route53_zone" "current" {
 resource "aws_route53_record" "cloudfront" {
   zone_id = var.zone_id
   name    = local.application_fqdn
-  type    = "CNAME"
-  ttl     = "5"
-  records = [aws_cloudfront_distribution.default.domain_name]
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.default.domain_name
+    zone_id                = aws_cloudfront_distribution.default.hosted_zone_id
+    evaluate_target_health = true
+  }
 }
 
 resource "aws_acm_certificate" "default" {
