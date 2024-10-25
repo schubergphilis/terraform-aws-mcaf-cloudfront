@@ -97,7 +97,7 @@
 | <a name="input_login_uri_path"></a> [login\_uri\_path](#input\_login\_uri\_path) | Optional path to the login URL | `string` | `null` | no |
 | <a name="input_max_ttl"></a> [max\_ttl](#input\_max\_ttl) | Maximum amount of time (in seconds) that an object is in a CloudFront cache | `number` | `86400` | no |
 | <a name="input_min_ttl"></a> [min\_ttl](#input\_min\_ttl) | Minimum amount of time that you want objects to stay in CloudFront caches | `number` | `0` | no |
-| <a name="input_minimum_protocol_version"></a> [minimum\_protocol\_version](#input\_minimum\_protocol\_version) | The minimum version of the SSL protocol that you want CloudFront to use for HTTPS connections | `string` | `"TLSv1.1_2016"` | no |
+| <a name="input_minimum_protocol_version"></a> [minimum\_protocol\_version](#input\_minimum\_protocol\_version) | The minimum version of the SSL protocol that you want CloudFront to use for HTTPS connections | `string` | `"TLSv1.2_2018"` | no |
 | <a name="input_okta_app_name"></a> [okta\_app\_name](#input\_okta\_app\_name) | The Okta OIDC application name | `string` | `null` | no |
 | <a name="input_okta_groups"></a> [okta\_groups](#input\_okta\_groups) | The default groups assigned to the Okta OIDC application | `list(string)` | `[]` | no |
 | <a name="input_okta_org_name"></a> [okta\_org\_name](#input\_okta\_org\_name) | The Okta organization for the OIDC application | `string` | `null` | no |
