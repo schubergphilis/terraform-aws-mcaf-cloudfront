@@ -236,7 +236,7 @@ variable "login_uri_path" {
 
 variable "minimum_protocol_version" {
   type        = string
-  default     = "TLSv1.1_2016"
+  default     = "TLSv1.2_2018"
   description = "The minimum version of the SSL protocol that you want CloudFront to use for HTTPS connections"
 }
 
