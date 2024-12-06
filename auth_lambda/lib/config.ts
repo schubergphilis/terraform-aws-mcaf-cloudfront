@@ -1,4 +1,5 @@
-import {SSM} from "aws-sdk";
+import { SSM } from "@aws-sdk/client-ssm";
+
 
 let _config: Config | null = null;
 
@@ -52,7 +53,8 @@ export async function getConfig(distributionId: string): Promise<Config | null> 
             WithDecryption: true
         });
 
-        const resp = await result.promise();
+        const resp = await result
+        
         for (let param of resp.Parameters) {
             _config[param.Name.replace(`${prefix}/`, "")] = param.Value;
         }
