@@ -1,5 +1,12 @@
 # terraform-aws-mcaf-cloudfront
 
+Terraform to create a CloudFront distribution with a S3 origin bucket and Okta authentication.
+
+As opposed to other MCAF modules, this module does not provide a specific resource, but rather a set of resources that can be used to create a CloudFront distribution with an S3 origin bucket and Okta authentication. It is a very specific use case with a specific set of requirements. 
+
+
+```hcl
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 

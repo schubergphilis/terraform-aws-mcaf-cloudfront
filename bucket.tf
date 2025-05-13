@@ -53,7 +53,9 @@ data "aws_iam_policy_document" "origin_bucket" {
 }
 
 module "origin_bucket" {
-  source                  = "github.com/schubergphilis/terraform-aws-mcaf-s3?ref=v0.10.1"
+  source  = "schubergphilis/mcaf-s3/aws"
+  version = "~> 1.5.2"
+
   name                    = var.name
   block_public_acls       = var.block_public_acls
   block_public_policy     = var.block_public_policy

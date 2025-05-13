@@ -40,14 +40,20 @@ data "aws_iam_policy_document" "authentication" {
 module "authentication" {
   providers = { aws.lambda = aws.cloudfront }
   count     = length(local.create_auth_lambda)
-  source    = "github.com/schubergphilis/terraform-aws-mcaf-lambda?ref=v0.3.3"
-  name      = "${var.name}-authentication"
-  filename  = "${path.module}/auth_lambda/artifacts/index.zip"
-  runtime   = "nodejs22.x"
-  handler   = "index.handler"
-  policy    = data.aws_iam_policy_document.authentication.json
-  publish   = true
-  tags      = var.tags
+
+  source  = "schubergphilis/mcaf-lambda/aws"
+  version = "~> 2.2.0"
+
+  name     = "${var.name}-authentication"
+  filename = "${path.module}/auth_lambda/artifacts/index.zip"
+  runtime  = "nodejs22.x"
+  handler  = "index.handler"
+  publish  = true
+  tags     = var.tags
+
+  execution_role = {
+    policy = data.aws_iam_policy_document.authentication.json
+  }
 }
 
 resource "okta_app_oauth" "default" {
