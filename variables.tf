@@ -212,6 +212,12 @@ variable "ipv6_enabled" {
   description = "Whether IPv6 is enabled for the distribution"
 }
 
+variable "kms_key_arn" {
+  type        = string
+  default     = null
+  description = "The ARN of the KMS key used for encryption"
+}
+
 variable "lambda_function_association" {
   type = list(object({
     event_type   = string

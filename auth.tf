@@ -95,62 +95,76 @@ resource "tls_private_key" "default" {
 resource "aws_ssm_parameter" "client_id" {
   provider = aws.cloudfront
   count    = length(local.create_auth_lambda)
-  name     = "${local.ssm_prefix}/client_id"
-  type     = "SecureString"
-  value    = okta_app_oauth.default[0].client_id
-  tags     = var.tags
+
+  name   = "${local.ssm_prefix}/client_id"
+  key_id = var.kms_key_arn
+  type   = "SecureString"
+  value  = okta_app_oauth.default[0].client_id
+  tags   = var.tags
 }
 
 resource "aws_ssm_parameter" "client_secret" {
   provider = aws.cloudfront
   count    = length(local.create_auth_lambda)
-  name     = "${local.ssm_prefix}/client_secret"
-  type     = "SecureString"
-  value    = okta_app_oauth.default[0].client_secret
-  tags     = var.tags
+
+  name   = "${local.ssm_prefix}/client_secret"
+  key_id = var.kms_key_arn
+  type   = "SecureString"
+  value  = okta_app_oauth.default[0].client_secret
+  tags   = var.tags
 }
 
 resource "aws_ssm_parameter" "okta_org_name" {
   provider = aws.cloudfront
   count    = length(local.create_auth_lambda)
-  name     = "${local.ssm_prefix}/okta_org_name"
-  type     = "String"
-  value    = var.okta_org_name
-  tags     = var.tags
+
+  name   = "${local.ssm_prefix}/okta_org_name"
+  key_id = var.kms_key_arn
+  type   = "String"
+  value  = var.okta_org_name
+  tags   = var.tags
 }
 
 resource "aws_ssm_parameter" "private_key" {
   provider = aws.cloudfront
   count    = length(local.create_auth_lambda)
-  name     = "${local.ssm_prefix}/private_key"
-  type     = "SecureString"
-  value    = tls_private_key.default[0].private_key_pem
-  tags     = var.tags
+
+  name   = "${local.ssm_prefix}/private_key"
+  key_id = var.kms_key_arn
+  type   = "SecureString"
+  value  = tls_private_key.default[0].private_key_pem
+  tags   = var.tags
 }
 
 resource "aws_ssm_parameter" "public_key" {
   provider = aws.cloudfront
   count    = length(local.create_auth_lambda)
-  name     = "${local.ssm_prefix}/public_key"
-  type     = "SecureString"
-  value    = tls_private_key.default[0].public_key_pem
-  tags     = var.tags
+
+  name   = "${local.ssm_prefix}/public_key"
+  key_id = var.kms_key_arn
+  type   = "SecureString"
+  value  = tls_private_key.default[0].public_key_pem
+  tags   = var.tags
 }
 
 resource "aws_ssm_parameter" "redirect_uri" {
   provider = aws.cloudfront
   count    = length(local.create_auth_lambda)
-  name     = "${local.ssm_prefix}/redirect_uri"
-  type     = "String"
-  value    = local.redirect_uri
-  tags     = var.tags
+
+  name   = "${local.ssm_prefix}/redirect_uri"
+  key_id = var.kms_key_arn
+  type   = "String"
+  value  = local.redirect_uri
+  tags   = var.tags
 }
 
 resource "aws_ssm_parameter" "cookie_domain" {
   provider = aws.cloudfront
   count    = length(local.create_auth_lambda)
-  name     = "${local.ssm_prefix}/cookie_domain"
-  type     = "String"
-  value    = local.cookie_domain
-  tags     = var.tags
+
+  name   = "${local.ssm_prefix}/cookie_domain"
+  key_id = var.kms_key_arn
+  type   = "String"
+  value  = local.cookie_domain
+  tags   = var.tags
 }
