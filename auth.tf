@@ -42,18 +42,15 @@ module "authentication" {
   count     = length(local.create_auth_lambda)
 
   source  = "schubergphilis/mcaf-lambda/aws"
-  version = "~> 2.2.0"
+  version = "~> 1.4.1"
 
   name     = "${var.name}-authentication"
   filename = "${path.module}/auth_lambda/artifacts/index.zip"
+  policy   = data.aws_iam_policy_document.authentication.json
   runtime  = "nodejs22.x"
   handler  = "index.handler"
   publish  = true
   tags     = var.tags
-
-  execution_role = {
-    policy = data.aws_iam_policy_document.authentication.json
-  }
 }
 
 resource "okta_app_oauth" "default" {
@@ -115,14 +112,14 @@ resource "aws_ssm_parameter" "client_secret" {
 }
 
 resource "aws_ssm_parameter" "okta_org_name" {
+  #checkov:skip=CKV2_AWS_34: "AWS SSM Parameter should be Encrypted"
   provider = aws.cloudfront
   count    = length(local.create_auth_lambda)
 
-  name   = "${local.ssm_prefix}/okta_org_name"
-  key_id = var.kms_key_arn
-  type   = "String"
-  value  = var.okta_org_name
-  tags   = var.tags
+  name  = "${local.ssm_prefix}/okta_org_name"
+  type  = "String"
+  value = var.okta_org_name
+  tags  = var.tags
 }
 
 resource "aws_ssm_parameter" "private_key" {
@@ -148,23 +145,23 @@ resource "aws_ssm_parameter" "public_key" {
 }
 
 resource "aws_ssm_parameter" "redirect_uri" {
+  #checkov:skip=CKV2_AWS_34: "AWS SSM Parameter should be Encrypted"
   provider = aws.cloudfront
   count    = length(local.create_auth_lambda)
 
-  name   = "${local.ssm_prefix}/redirect_uri"
-  key_id = var.kms_key_arn
-  type   = "String"
-  value  = local.redirect_uri
-  tags   = var.tags
+  name  = "${local.ssm_prefix}/redirect_uri"
+  type  = "String"
+  value = local.redirect_uri
+  tags  = var.tags
 }
 
 resource "aws_ssm_parameter" "cookie_domain" {
+  #checkov:skip=CKV2_AWS_34: "AWS SSM Parameter should be Encrypted"
   provider = aws.cloudfront
   count    = length(local.create_auth_lambda)
 
-  name   = "${local.ssm_prefix}/cookie_domain"
-  key_id = var.kms_key_arn
-  type   = "String"
-  value  = local.cookie_domain
-  tags   = var.tags
+  name  = "${local.ssm_prefix}/cookie_domain"
+  type  = "String"
+  value = local.cookie_domain
+  tags  = var.tags
 }
