@@ -15,7 +15,7 @@ As opposed to other MCAF modules, this module does not provide a specific resour
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0.0 |
 | <a name="requirement_okta"></a> [okta](#requirement\_okta) | >= 4.0.0 |
-| <a name="requirement_tls"></a> [tls](#requirement\_tls) | ~ 4.1 |
+| <a name="requirement_tls"></a> [tls](#requirement\_tls) | ~> 4.1 |
 
 ## Providers
 
@@ -24,7 +24,7 @@ As opposed to other MCAF modules, this module does not provide a specific resour
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0.0 |
 | <a name="provider_aws.cloudfront"></a> [aws.cloudfront](#provider\_aws.cloudfront) | >= 5.0.0 |
 | <a name="provider_okta"></a> [okta](#provider\_okta) | >= 4.0.0 |
-| <a name="provider_tls"></a> [tls](#provider\_tls) | ~ 4.1 |
+| <a name="provider_tls"></a> [tls](#provider\_tls) | ~> 4.1 |
 
 ## Modules
 
@@ -99,6 +99,7 @@ As opposed to other MCAF modules, this module does not provide a specific resour
 | <a name="input_hide_web"></a> [hide\_web](#input\_hide\_web) | Do not display the Okta application icon to users | `bool` | `false` | no |
 | <a name="input_ignore_public_acls"></a> [ignore\_public\_acls](#input\_ignore\_public\_acls) | Whether Amazon S3 should ignore public ACLs for this bucket | `bool` | `true` | no |
 | <a name="input_ipv6_enabled"></a> [ipv6\_enabled](#input\_ipv6\_enabled) | Whether IPv6 is enabled for the distribution | `bool` | `false` | no |
+| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | The ARN of the KMS key used for encryption | `string` | `null` | no |
 | <a name="input_lambda_function_association"></a> [lambda\_function\_association](#input\_lambda\_function\_association) | A config block that triggers a lambda function with specific actions | <pre>list(object({<br/>    event_type   = string<br/>    include_body = bool<br/>    lambda_arn   = string<br/>  }))</pre> | `[]` | no |
 | <a name="input_login_uri_path"></a> [login\_uri\_path](#input\_login\_uri\_path) | Optional path to the login URL | `string` | `null` | no |
 | <a name="input_max_ttl"></a> [max\_ttl](#input\_max\_ttl) | Maximum amount of time (in seconds) that an object is in a CloudFront cache | `number` | `86400` | no |
