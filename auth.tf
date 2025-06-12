@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "authentication" {
 }
 
 module "authentication" {
-  providers = { aws.lambda = aws.cloudfront }
+  providers = { aws = aws.cloudfront }
   count     = length(local.create_auth_lambda)
 
   source  = "schubergphilis/mcaf-lambda/aws"
