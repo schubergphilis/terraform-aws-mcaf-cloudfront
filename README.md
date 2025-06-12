@@ -12,25 +12,26 @@ As opposed to other MCAF modules, this module does not provide a specific resour
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0.0 |
 | <a name="requirement_okta"></a> [okta](#requirement\_okta) | >= 4.0.0 |
+| <a name="requirement_tls"></a> [tls](#requirement\_tls) | ~ 4.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0.0 |
-| <a name="provider_aws.cloudfront"></a> [aws.cloudfront](#provider\_aws.cloudfront) | >= 4.0.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0.0 |
+| <a name="provider_aws.cloudfront"></a> [aws.cloudfront](#provider\_aws.cloudfront) | >= 5.0.0 |
 | <a name="provider_okta"></a> [okta](#provider\_okta) | >= 4.0.0 |
-| <a name="provider_tls"></a> [tls](#provider\_tls) | n/a |
+| <a name="provider_tls"></a> [tls](#provider\_tls) | ~ 4.1 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_authentication"></a> [authentication](#module\_authentication) | github.com/schubergphilis/terraform-aws-mcaf-lambda | v0.3.3 |
-| <a name="module_origin_bucket"></a> [origin\_bucket](#module\_origin\_bucket) | github.com/schubergphilis/terraform-aws-mcaf-s3 | v0.10.1 |
+| <a name="module_authentication"></a> [authentication](#module\_authentication) | schubergphilis/mcaf-lambda/aws | ~> 2.2.0 |
+| <a name="module_origin_bucket"></a> [origin\_bucket](#module\_origin\_bucket) | schubergphilis/mcaf-s3/aws | ~> 1.5.2 |
 
 ## Resources
 
@@ -63,7 +64,6 @@ As opposed to other MCAF modules, this module does not provide a specific resour
 |------|-------------|------|---------|:--------:|
 | <a name="input_name"></a> [name](#input\_name) | The name of the CloudFront distribution | `string` | n/a | yes |
 | <a name="input_subdomain"></a> [subdomain](#input\_subdomain) | A DNS subdomain for this distribution | `string` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | A mapping of tags to assign to all resources | `map(string)` | n/a | yes |
 | <a name="input_zone_id"></a> [zone\_id](#input\_zone\_id) | ID of the Route53 zone in which to create the subdomain record | `string` | n/a | yes |
 | <a name="input_additional_redirect_uris"></a> [additional\_redirect\_uris](#input\_additional\_redirect\_uris) | Additional login redirect URLs | `list(string)` | `null` | no |
 | <a name="input_aliases"></a> [aliases](#input\_aliases) | Extra CNAMEs (alternate domain names), if any, for this distribution | `list(string)` | `[]` | no |
@@ -100,11 +100,10 @@ As opposed to other MCAF modules, this module does not provide a specific resour
 | <a name="input_ignore_public_acls"></a> [ignore\_public\_acls](#input\_ignore\_public\_acls) | Whether Amazon S3 should ignore public ACLs for this bucket | `bool` | `true` | no |
 | <a name="input_ipv6_enabled"></a> [ipv6\_enabled](#input\_ipv6\_enabled) | Whether IPv6 is enabled for the distribution | `bool` | `false` | no |
 | <a name="input_lambda_function_association"></a> [lambda\_function\_association](#input\_lambda\_function\_association) | A config block that triggers a lambda function with specific actions | <pre>list(object({<br/>    event_type   = string<br/>    include_body = bool<br/>    lambda_arn   = string<br/>  }))</pre> | `[]` | no |
-| <a name="input_logging"></a> [logging](#input\_logging) | Enables logging for this distribution | `bool` | `true` | no |
 | <a name="input_login_uri_path"></a> [login\_uri\_path](#input\_login\_uri\_path) | Optional path to the login URL | `string` | `null` | no |
 | <a name="input_max_ttl"></a> [max\_ttl](#input\_max\_ttl) | Maximum amount of time (in seconds) that an object is in a CloudFront cache | `number` | `86400` | no |
 | <a name="input_min_ttl"></a> [min\_ttl](#input\_min\_ttl) | Minimum amount of time that you want objects to stay in CloudFront caches | `number` | `0` | no |
-| <a name="input_minimum_protocol_version"></a> [minimum\_protocol\_version](#input\_minimum\_protocol\_version) | The minimum version of the SSL protocol that you want CloudFront to use for HTTPS connections | `string` | `"TLSv1.2_2018"` | no |
+| <a name="input_minimum_protocol_version"></a> [minimum\_protocol\_version](#input\_minimum\_protocol\_version) | The minimum version of the SSL protocol that you want CloudFront to use for HTTPS connections | `string` | `"TLSv1.2_2021"` | no |
 | <a name="input_okta_app_name"></a> [okta\_app\_name](#input\_okta\_app\_name) | The Okta OIDC application name | `string` | `null` | no |
 | <a name="input_okta_groups"></a> [okta\_groups](#input\_okta\_groups) | The default groups assigned to the Okta OIDC application | `list(string)` | `[]` | no |
 | <a name="input_okta_org_name"></a> [okta\_org\_name](#input\_okta\_org\_name) | The Okta organization for the OIDC application | `string` | `null` | no |
@@ -113,6 +112,7 @@ As opposed to other MCAF modules, this module does not provide a specific resour
 | <a name="input_price_class"></a> [price\_class](#input\_price\_class) | Price class for this distribution | `string` | `"PriceClass_100"` | no |
 | <a name="input_redirect_uri_path"></a> [redirect\_uri\_path](#input\_redirect\_uri\_path) | Path to the login redirect URL | `string` | `"_callback"` | no |
 | <a name="input_restrict_public_buckets"></a> [restrict\_public\_buckets](#input\_restrict\_public\_buckets) | Whether Amazon S3 should restrict public bucket policies for this bucket | `bool` | `true` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | A mapping of tags to assign to all resources | `map(string)` | `{}` | no |
 | <a name="input_use_regional_endpoint"></a> [use\_regional\_endpoint](#input\_use\_regional\_endpoint) | Whether to use a regional instead of the global endpoint address | `bool` | `false` | no |
 | <a name="input_viewer_protocol_policy"></a> [viewer\_protocol\_policy](#input\_viewer\_protocol\_policy) | Use this element to specify the protocol that users can use to access the files | `string` | `"redirect-to-https"` | no |
 | <a name="input_wait_for_deployment"></a> [wait\_for\_deployment](#input\_wait\_for\_deployment) | Whether to wait for the deployment of the CloudFront Distribution to be complete | `bool` | `true` | no |
