@@ -212,6 +212,12 @@ variable "ipv6_enabled" {
   description = "Whether IPv6 is enabled for the distribution"
 }
 
+variable "kms_key_arn" {
+  type        = string
+  default     = null
+  description = "The ARN of the KMS key used for encryption"
+}
+
 variable "lambda_function_association" {
   type = list(object({
     event_type   = string
@@ -222,12 +228,6 @@ variable "lambda_function_association" {
   description = "A config block that triggers a lambda function with specific actions"
 }
 
-variable "logging" {
-  type        = bool
-  default     = true
-  description = "Enables logging for this distribution"
-}
-
 variable "login_uri_path" {
   type        = string
   default     = null
@@ -236,7 +236,7 @@ variable "login_uri_path" {
 
 variable "minimum_protocol_version" {
   type        = string
-  default     = "TLSv1.2_2018"
+  default     = "TLSv1.2_2021"
   description = "The minimum version of the SSL protocol that you want CloudFront to use for HTTPS connections"
 }
 
@@ -330,5 +330,6 @@ variable "zone_id" {
 
 variable "tags" {
   type        = map(string)
+  default     = {}
   description = "A mapping of tags to assign to all resources"
 }

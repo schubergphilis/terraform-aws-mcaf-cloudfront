@@ -1,3 +1,5 @@
+# Deployment
+
 To update the Lambda package, execute `make package`. This has the following dependencies:
   * typescript
   * node
