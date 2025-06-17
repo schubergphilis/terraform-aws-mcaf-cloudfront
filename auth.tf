@@ -44,13 +44,14 @@ module "authentication" {
   source  = "schubergphilis/mcaf-lambda/aws"
   version = "~> 1.4.1"
 
-  name     = "${var.name}-authentication"
-  filename = "${path.module}/auth_lambda/artifacts/index.zip"
-  policy   = data.aws_iam_policy_document.authentication.json
-  runtime  = "nodejs22.x"
-  handler  = "index.handler"
-  publish  = true
-  tags     = var.tags
+  name          = "${var.name}-authentication"
+  create_policy = true
+  filename      = "${path.module}/auth_lambda/artifacts/index.zip"
+  policy        = data.aws_iam_policy_document.authentication.json
+  runtime       = "nodejs22.x"
+  handler       = "index.handler"
+  publish       = true
+  tags          = var.tags
 }
 
 resource "okta_app_oauth" "default" {
