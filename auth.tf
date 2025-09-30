@@ -34,7 +34,7 @@ data "aws_iam_policy_document" "authentication" {
       "ssm:GetParameters"
     ]
     resources = [
-      "arn:aws:ssm:*:*:parameter/${local.ssm_prefix}}/*"
+      "arn:aws:ssm:*:*:parameter/cloudfront-config/*"
     ]
   }
 }
