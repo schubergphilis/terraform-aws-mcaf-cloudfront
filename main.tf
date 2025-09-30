@@ -76,6 +76,30 @@ resource "aws_cloudfront_origin_access_control" "default" {
   signing_protocol                  = "sigv4"
 }
 
+resource "aws_cloudfront_response_headers_policy" "default" {
+  name = var.name
+
+  security_headers_config {
+    # Strict-Transport-Security: long max-age, include subdomains, consider preload
+    strict_transport_security {
+      override                   = true
+      access_control_max_age_sec = 63072000 # 2 years
+      include_subdomains         = true
+      preload                    = true
+    }
+
+    # Prevent MIME sniffing
+    content_type_options {
+      override = true
+    }
+
+    # Privacy-minded referrer policy
+    referrer_policy {
+      override        = true
+      referrer_policy = "strict-origin-when-cross-origin"
+    }
+  }
+}
 resource "aws_cloudfront_distribution" "default" {
   #checkov:skip=CKV_AWS_374: "Ensure AWS CloudFront web distribution has geo restriction enabled"
   #checkov:skip=CKV_AWS_310: "Ensure CloudFront distributions should have origin failover configured"
@@ -121,10 +145,11 @@ resource "aws_cloudfront_distribution" "default" {
       }
     }
 
-    viewer_protocol_policy = var.viewer_protocol_policy
-    default_ttl            = var.default_ttl
-    min_ttl                = var.min_ttl
-    max_ttl                = var.max_ttl
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.default.id
+    viewer_protocol_policy     = var.viewer_protocol_policy
+    default_ttl                = var.default_ttl
+    min_ttl                    = var.min_ttl
+    max_ttl                    = var.max_ttl
 
     dynamic "lambda_function_association" {
       for_each = local.create_auth_lambda
