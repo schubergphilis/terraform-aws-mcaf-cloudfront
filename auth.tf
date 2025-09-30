@@ -1,6 +1,7 @@
 locals {
   cookie_domain      = var.cookie_domain != null ? var.cookie_domain : local.login_domain
   create_auth_lambda = var.authentication && !var.okta_spa ? ["create"] : []
+  global_region      = "us-east-1"
   login_domain       = aws_route53_record.cloudfront.name
   login_uri          = var.login_uri_path != null ? format("https://%s/%s", local.login_domain, trimprefix(var.login_uri_path, "/")) : "https://${local.login_domain}/"
   okta_groups        = var.authentication ? var.okta_groups : []
@@ -32,26 +33,29 @@ data "aws_iam_policy_document" "authentication" {
       "ssm:GetParameters"
     ]
     resources = [
-      "arn:aws:ssm:*:*:parameter/cloudfront-config/${aws_cloudfront_distribution.default.id}/*"
+      "arn:aws:ssm:*:*:parameter/cloudfront-config/*"
     ]
   }
 }
 
 module "authentication" {
-  providers = { aws = aws.cloudfront }
-  count     = length(local.create_auth_lambda)
+  count = length(local.create_auth_lambda)
 
   source  = "schubergphilis/mcaf-lambda/aws"
-  version = "~> 1.4.1"
+  version = "~> 3.0.0"
 
-  name          = "${var.name}-authentication"
-  create_policy = true
-  filename      = "${path.module}/auth_lambda/artifacts/index.zip"
-  policy        = data.aws_iam_policy_document.authentication.json
-  runtime       = "nodejs22.x"
-  handler       = "index.handler"
-  publish       = true
-  tags          = var.tags
+  region   = local.global_region
+  name     = "${var.name}-authentication"
+  filename = "${path.module}/auth_lambda/artifacts/index.zip"
+  runtime  = "nodejs22.x"
+  handler  = "index.handler"
+  publish  = true
+  tags     = var.tags
+
+  execution_role = {
+    create_policy = true
+    policy        = data.aws_iam_policy_document.authentication.json
+  }
 }
 
 resource "okta_app_oauth" "default" {
@@ -91,9 +95,9 @@ resource "tls_private_key" "default" {
 }
 
 resource "aws_ssm_parameter" "client_id" {
-  provider = aws.cloudfront
-  count    = length(local.create_auth_lambda)
+  count = length(local.create_auth_lambda)
 
+  region = local.global_region
   name   = "${local.ssm_prefix}/client_id"
   key_id = var.kms_key_arn
   type   = "SecureString"
@@ -102,9 +106,9 @@ resource "aws_ssm_parameter" "client_id" {
 }
 
 resource "aws_ssm_parameter" "client_secret" {
-  provider = aws.cloudfront
-  count    = length(local.create_auth_lambda)
+  count = length(local.create_auth_lambda)
 
+  region = local.global_region
   name   = "${local.ssm_prefix}/client_secret"
   key_id = var.kms_key_arn
   type   = "SecureString"
@@ -114,19 +118,19 @@ resource "aws_ssm_parameter" "client_secret" {
 
 resource "aws_ssm_parameter" "okta_org_name" {
   #checkov:skip=CKV2_AWS_34: "AWS SSM Parameter should be Encrypted"
-  provider = aws.cloudfront
-  count    = length(local.create_auth_lambda)
+  count = length(local.create_auth_lambda)
 
-  name  = "${local.ssm_prefix}/okta_org_name"
-  type  = "String"
-  value = var.okta_org_name
-  tags  = var.tags
+  region = local.global_region
+  name   = "${local.ssm_prefix}/okta_org_name"
+  type   = "String"
+  value  = var.okta_org_name
+  tags   = var.tags
 }
 
 resource "aws_ssm_parameter" "private_key" {
-  provider = aws.cloudfront
-  count    = length(local.create_auth_lambda)
+  count = length(local.create_auth_lambda)
 
+  region = local.global_region
   name   = "${local.ssm_prefix}/private_key"
   key_id = var.kms_key_arn
   type   = "SecureString"
@@ -135,9 +139,9 @@ resource "aws_ssm_parameter" "private_key" {
 }
 
 resource "aws_ssm_parameter" "public_key" {
-  provider = aws.cloudfront
-  count    = length(local.create_auth_lambda)
+  count = length(local.create_auth_lambda)
 
+  region = local.global_region
   name   = "${local.ssm_prefix}/public_key"
   key_id = var.kms_key_arn
   type   = "SecureString"
@@ -147,22 +151,22 @@ resource "aws_ssm_parameter" "public_key" {
 
 resource "aws_ssm_parameter" "redirect_uri" {
   #checkov:skip=CKV2_AWS_34: "AWS SSM Parameter should be Encrypted"
-  provider = aws.cloudfront
-  count    = length(local.create_auth_lambda)
+  count = length(local.create_auth_lambda)
 
-  name  = "${local.ssm_prefix}/redirect_uri"
-  type  = "String"
-  value = local.redirect_uri
-  tags  = var.tags
+  region = local.global_region
+  name   = "${local.ssm_prefix}/redirect_uri"
+  type   = "String"
+  value  = local.redirect_uri
+  tags   = var.tags
 }
 
 resource "aws_ssm_parameter" "cookie_domain" {
   #checkov:skip=CKV2_AWS_34: "AWS SSM Parameter should be Encrypted"
-  provider = aws.cloudfront
-  count    = length(local.create_auth_lambda)
+  count = length(local.create_auth_lambda)
 
-  name  = "${local.ssm_prefix}/cookie_domain"
-  type  = "String"
-  value = local.cookie_domain
-  tags  = var.tags
+  region = local.global_region
+  name   = "${local.ssm_prefix}/cookie_domain"
+  type   = "String"
+  value  = local.cookie_domain
+  tags   = var.tags
 }

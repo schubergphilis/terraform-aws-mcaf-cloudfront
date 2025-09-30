@@ -294,6 +294,12 @@ variable "redirect_uri_path" {
   description = "Path to the login redirect URL"
 }
 
+variable "region" {
+  type        = string
+  default     = null
+  description = "The AWS region where resources will be created; if omitted the default provider region is used"
+}
+
 variable "restrict_public_buckets" {
   type        = bool
   default     = true

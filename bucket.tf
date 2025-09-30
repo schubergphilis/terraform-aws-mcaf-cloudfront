@@ -54,8 +54,9 @@ data "aws_iam_policy_document" "origin_bucket" {
 
 module "origin_bucket" {
   source  = "schubergphilis/mcaf-s3/aws"
-  version = "~> 1.5.2"
+  version = "~> 2.0.0"
 
+  region                  = var.region
   name                    = var.name
   block_public_acls       = var.block_public_acls
   block_public_policy     = var.block_public_policy
