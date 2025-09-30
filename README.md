@@ -13,25 +13,24 @@ As opposed to other MCAF modules, this module does not provide a specific resour
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0.0 |
-| <a name="requirement_okta"></a> [okta](#requirement\_okta) | >= 4.0.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 6.0 |
+| <a name="requirement_okta"></a> [okta](#requirement\_okta) | >= 6.0.0 |
 | <a name="requirement_tls"></a> [tls](#requirement\_tls) | ~> 4.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0.0 |
-| <a name="provider_aws.cloudfront"></a> [aws.cloudfront](#provider\_aws.cloudfront) | >= 5.0.0 |
-| <a name="provider_okta"></a> [okta](#provider\_okta) | >= 4.0.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 6.0 |
+| <a name="provider_okta"></a> [okta](#provider\_okta) | >= 6.0.0 |
 | <a name="provider_tls"></a> [tls](#provider\_tls) | ~> 4.1 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_authentication"></a> [authentication](#module\_authentication) | schubergphilis/mcaf-lambda/aws | ~> 1.4.1 |
-| <a name="module_origin_bucket"></a> [origin\_bucket](#module\_origin\_bucket) | schubergphilis/mcaf-s3/aws | ~> 1.5.2 |
+| <a name="module_authentication"></a> [authentication](#module\_authentication) | schubergphilis/mcaf-lambda/aws | ~> 3.0.0 |
+| <a name="module_origin_bucket"></a> [origin\_bucket](#module\_origin\_bucket) | schubergphilis/mcaf-s3/aws | ~> 2.0.0 |
 
 ## Resources
 
@@ -112,6 +111,7 @@ As opposed to other MCAF modules, this module does not provide a specific resour
 | <a name="input_origin_path"></a> [origin\_path](#input\_origin\_path) | A path that CloudFront uses to request your content from a specific directory | `string` | `""` | no |
 | <a name="input_price_class"></a> [price\_class](#input\_price\_class) | Price class for this distribution | `string` | `"PriceClass_100"` | no |
 | <a name="input_redirect_uri_path"></a> [redirect\_uri\_path](#input\_redirect\_uri\_path) | Path to the login redirect URL | `string` | `"_callback"` | no |
+| <a name="input_region"></a> [region](#input\_region) | The AWS region where resources will be created; if omitted the default provider region is used | `string` | `null` | no |
 | <a name="input_restrict_public_buckets"></a> [restrict\_public\_buckets](#input\_restrict\_public\_buckets) | Whether Amazon S3 should restrict public bucket policies for this bucket | `bool` | `true` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A mapping of tags to assign to all resources | `map(string)` | `{}` | no |
 | <a name="input_use_regional_endpoint"></a> [use\_regional\_endpoint](#input\_use\_regional\_endpoint) | Whether to use a regional instead of the global endpoint address | `bool` | `false` | no |
