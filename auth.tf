@@ -7,7 +7,6 @@ locals {
   okta_groups        = var.authentication ? var.okta_groups : []
   redirect_uri       = "https://${local.login_domain}/${trimprefix(var.redirect_uri_path, "/")}"
   ssm_prefix         = "/cloudfront-config/${aws_cloudfront_distribution.default.id}"
-
 }
 
 data "aws_iam_policy_document" "authentication" {

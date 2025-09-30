@@ -5,7 +5,7 @@ locals {
   deployment_arn    = var.deployment_arn != null ? { create : null } : {}
 
   domain_name = var.use_regional_endpoint ? format(
-    "%s.s3-%s.amazonaws.com", var.name, data.aws_region.current.name
+    "%s.s3-%s.amazonaws.com", var.name, data.aws_region.current.region
   ) : "${var.name}.s3.amazonaws.com"
 }
 
