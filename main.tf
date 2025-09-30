@@ -9,7 +9,9 @@ locals {
   ) : "${var.name}.s3.amazonaws.com"
 }
 
-data "aws_region" "current" {}
+data "aws_region" "current" {
+  region = var.region
+}
 
 data "aws_route53_zone" "current" {
   zone_id = var.zone_id
@@ -28,8 +30,9 @@ resource "aws_route53_record" "cloudfront" {
 }
 
 resource "aws_acm_certificate" "default" {
-  count             = local.certificate_count
-  provider          = aws.cloudfront
+  count = local.certificate_count
+
+  region            = local.global_region
   domain_name       = local.application_fqdn
   validation_method = "DNS"
   tags              = var.tags
@@ -58,8 +61,9 @@ resource "aws_route53_record" "validation" {
 }
 
 resource "aws_acm_certificate_validation" "default" {
-  count                   = local.certificate_count
-  provider                = aws.cloudfront
+  count = local.certificate_count
+
+  region                  = local.global_region
   certificate_arn         = aws_acm_certificate.default[count.index].arn
   validation_record_fqdns = [aws_route53_record.validation["create"].fqdn]
 }
