@@ -68,8 +68,12 @@ resource "aws_acm_certificate_validation" "default" {
   validation_record_fqdns = [aws_route53_record.validation["create"].fqdn]
 }
 
-resource "aws_cloudfront_origin_access_identity" "default" {
-  comment = var.name
+resource "aws_cloudfront_origin_access_control" "default" {
+  name                              = var.name
+  description                       = "Policy for ${var.name} Cloudfront Distribution"
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
 }
 
 resource "aws_cloudfront_distribution" "default" {
@@ -89,13 +93,10 @@ resource "aws_cloudfront_distribution" "default" {
   tags                = var.tags
 
   origin {
-    domain_name = local.domain_name
-    origin_id   = var.name
-    origin_path = var.origin_path
-
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.default.cloudfront_access_identity_path
-    }
+    domain_name              = local.domain_name
+    origin_id                = var.name
+    origin_path              = var.origin_path
+    origin_access_control_id = aws_cloudfront_origin_access_control.default.id
   }
 
   viewer_certificate {
