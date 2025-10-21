@@ -114,7 +114,7 @@ resource "aws_cloudfront_distribution" "default" {
   is_ipv6_enabled     = var.ipv6_enabled
   price_class         = var.price_class
   wait_for_deployment = var.wait_for_deployment
-  tags                = var.tags
+  tags                = merge(var.tags, { "Name" = var.name })
 
   origin {
     domain_name              = local.domain_name
