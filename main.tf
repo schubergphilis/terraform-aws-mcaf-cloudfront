@@ -106,7 +106,6 @@ resource "aws_cloudfront_distribution" "default" {
   #checkov:skip=CKV_AWS_68: "CloudFront Distribution should have WAF enabled"
   #checkov:skip=CKV_AWS_86: "Ensure CloudFront distribution has Access Logging enabled"
   #checkov:skip=CKV2_AWS_47: "Ensure AWS CloudFront attached WAFv2 WebACL is configured with AMR for Log4j Vulnerability"
-  #checkov:skip=CKV2_AWS_32: "Ensure CloudFront distribution has a response headers policy attached"
   aliases             = distinct(compact(concat(var.aliases, [local.application_fqdn])))
   comment             = var.comment
   default_root_object = var.default_root_object
