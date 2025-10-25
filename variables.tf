@@ -228,6 +228,16 @@ variable "lambda_function_association" {
   description = "A config block that triggers a lambda function with specific actions"
 }
 
+variable "logging" {
+  type = object({
+    target_bucket_arn = string
+    target_prefix     = string
+    output_format     = optional(string, "parquet")
+  })
+  default     = null
+  description = "Logging configuration, logging is disabled by default."
+}
+
 variable "login_uri_path" {
   type        = string
   default     = null
