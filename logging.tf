@@ -17,7 +17,7 @@ resource "aws_cloudwatch_log_delivery_destination" "access_logs" {
   tags          = var.tags
 
   delivery_destination_configuration {
-    destination_resource_arn = var.logging.target_bucket_arn
+    destination_resource_arn = "arn:aws:s3:::${var.logging.target_bucket}"
   }
 }
 
