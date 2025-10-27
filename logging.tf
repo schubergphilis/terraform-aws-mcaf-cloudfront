@@ -17,7 +17,7 @@ resource "aws_cloudwatch_log_delivery_destination" "access_logs" {
   tags          = var.tags
 
   delivery_destination_configuration {
-    destination_resource_arn = "arn:aws:s3:::${var.logging.target_bucket}"
+    destination_resource_arn = "arn:aws:s3:::${var.logging.target_bucket}/${var.logging.target_prefix}"
   }
 }
 
@@ -28,8 +28,4 @@ resource "aws_cloudwatch_log_delivery" "access_logs" {
   delivery_source_name     = aws_cloudwatch_log_delivery_source.access_logs[0].name
   delivery_destination_arn = aws_cloudwatch_log_delivery_destination.access_logs[0].arn
   tags                     = var.tags
-
-  s3_delivery_configuration {
-    suffix_path = var.logging.target_prefix
-  }
 }
