@@ -44,13 +44,14 @@ module "authentication" {
   source  = "schubergphilis/mcaf-lambda/aws"
   version = "~> 3.0.0"
 
-  region   = local.global_region
-  name     = "${var.name}-authentication"
-  filename = "${path.module}/auth_lambda/artifacts/index.zip"
-  runtime  = "nodejs22.x"
-  handler  = "index.handler"
-  publish  = true
-  tags     = var.tags
+  region      = local.global_region
+  name        = "${var.name}-authentication"
+  filename    = "${path.module}/auth_lambda/artifacts/index.zip"
+  runtime     = "nodejs22.x"
+  handler     = "index.handler"
+  publish     = true
+  kms_key_arn = var.lambda_kms_key_arn
+  tags        = var.tags
 
   execution_role = {
     create_policy = true

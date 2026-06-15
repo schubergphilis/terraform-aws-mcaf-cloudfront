@@ -212,10 +212,22 @@ variable "ipv6_enabled" {
   description = "Whether IPv6 is enabled for the distribution"
 }
 
+variable "bucket_kms_key_arn" {
+  type        = string
+  default     = null
+  description = "The ARN of the KMS key used for S3 origin bucket encryption"
+}
+
 variable "kms_key_arn" {
   type        = string
   default     = null
-  description = "The ARN of the KMS key used for encryption"
+  description = "The ARN of the KMS key used for SSM SecureString parameter encryption"
+}
+
+variable "lambda_kms_key_arn" {
+  type        = string
+  default     = null
+  description = "The ARN of the KMS key used for the authentication Lambda CloudWatch log group encryption"
 }
 
 variable "lambda_function_association" {
@@ -315,6 +327,7 @@ variable "restrict_public_buckets" {
   default     = true
   description = "Whether Amazon S3 should restrict public bucket policies for this bucket"
 }
+
 
 variable "subdomain" {
   type        = string
