@@ -54,8 +54,9 @@ module "authentication" {
   tags        = var.tags
 
   execution_role = {
-    create_policy = true
-    policy        = data.aws_iam_policy_document.authentication.json
+    create_policy        = true
+    policy               = data.aws_iam_policy_document.authentication.json
+    permissions_boundary = var.permissions_boundary_arn
   }
 }
 
