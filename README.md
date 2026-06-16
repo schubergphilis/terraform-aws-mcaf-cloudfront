@@ -73,7 +73,6 @@ As opposed to other MCAF modules, this module does not provide a specific resour
 | <a name="input_authentication"></a> [authentication](#input\_authentication) | Whether to protect the cloudfront distribution behind an Okta application | `bool` | `false` | no |
 | <a name="input_block_public_acls"></a> [block\_public\_acls](#input\_block\_public\_acls) | Whether Amazon S3 should block public ACLs for this bucket | `bool` | `true` | no |
 | <a name="input_block_public_policy"></a> [block\_public\_policy](#input\_block\_public\_policy) | Whether Amazon S3 should block public bucket policies for this bucket | `bool` | `true` | no |
-| <a name="input_bucket_kms_key_arn"></a> [bucket\_kms\_key\_arn](#input\_bucket\_kms\_key\_arn) | The ARN of the KMS key used for S3 origin bucket encryption | `string` | `null` | no |
 | <a name="input_bucket_lifecycle_rule"></a> [bucket\_lifecycle\_rule](#input\_bucket\_lifecycle\_rule) | List of maps containing lifecycle management configuration settings for this bucket | `any` | `[]` | no |
 | <a name="input_bucket_policy"></a> [bucket\_policy](#input\_bucket\_policy) | The bucket policy to merge with the Cloudfront permissions | `string` | `null` | no |
 | <a name="input_cached_methods"></a> [cached\_methods](#input\_cached\_methods) | Controls whether CloudFront caches the response to requests | `list(string)` | <pre>[<br/>  "GET",<br/>  "HEAD"<br/>]</pre> | no |
@@ -101,9 +100,8 @@ As opposed to other MCAF modules, this module does not provide a specific resour
 | <a name="input_hide_web"></a> [hide\_web](#input\_hide\_web) | Do not display the Okta application icon to users | `bool` | `false` | no |
 | <a name="input_ignore_public_acls"></a> [ignore\_public\_acls](#input\_ignore\_public\_acls) | Whether Amazon S3 should ignore public ACLs for this bucket | `bool` | `true` | no |
 | <a name="input_ipv6_enabled"></a> [ipv6\_enabled](#input\_ipv6\_enabled) | Whether IPv6 is enabled for the distribution | `bool` | `false` | no |
-| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | The ARN of the KMS key used for SSM SecureString parameter encryption | `string` | `null` | no |
+| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | The ARN of the KMS key used for all encryption: SSM SecureString parameters, Lambda CloudWatch log group, and S3 origin bucket | `string` | `null` | no |
 | <a name="input_lambda_function_association"></a> [lambda\_function\_association](#input\_lambda\_function\_association) | A config block that triggers a lambda function with specific actions | <pre>list(object({<br/>    event_type   = string<br/>    include_body = bool<br/>    lambda_arn   = string<br/>  }))</pre> | `[]` | no |
-| <a name="input_lambda_kms_key_arn"></a> [lambda\_kms\_key\_arn](#input\_lambda\_kms\_key\_arn) | The ARN of the KMS key used for the authentication Lambda CloudWatch log group encryption | `string` | `null` | no |
 | <a name="input_logging"></a> [logging](#input\_logging) | Logging configuration, logging is disabled by default. | <pre>object({<br/>    target_bucket = string<br/>    target_prefix = string<br/>    output_format = optional(string, "parquet")<br/>  })</pre> | `null` | no |
 | <a name="input_login_uri_path"></a> [login\_uri\_path](#input\_login\_uri\_path) | Optional path to the login URL | `string` | `null` | no |
 | <a name="input_max_ttl"></a> [max\_ttl](#input\_max\_ttl) | Maximum amount of time (in seconds) that an object is in a CloudFront cache | `number` | `86400` | no |

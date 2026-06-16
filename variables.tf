@@ -212,22 +212,10 @@ variable "ipv6_enabled" {
   description = "Whether IPv6 is enabled for the distribution"
 }
 
-variable "bucket_kms_key_arn" {
-  type        = string
-  default     = null
-  description = "The ARN of the KMS key used for S3 origin bucket encryption"
-}
-
 variable "kms_key_arn" {
   type        = string
   default     = null
-  description = "The ARN of the KMS key used for SSM SecureString parameter encryption"
-}
-
-variable "lambda_kms_key_arn" {
-  type        = string
-  default     = null
-  description = "The ARN of the KMS key used for the authentication Lambda CloudWatch log group encryption"
+  description = "The ARN of the KMS key used for all encryption: SSM SecureString parameters, Lambda CloudWatch log group, and S3 origin bucket"
 }
 
 variable "lambda_function_association" {

@@ -50,7 +50,7 @@ module "authentication" {
   runtime     = "nodejs22.x"
   handler     = "index.handler"
   publish     = true
-  kms_key_arn = var.lambda_kms_key_arn
+  kms_key_arn = var.kms_key_arn
   tags        = var.tags
 
   execution_role = {
