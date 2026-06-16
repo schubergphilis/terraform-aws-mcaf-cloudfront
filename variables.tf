@@ -328,7 +328,6 @@ variable "restrict_public_buckets" {
   description = "Whether Amazon S3 should restrict public bucket policies for this bucket"
 }
 
-
 variable "subdomain" {
   type        = string
   description = "A DNS subdomain for this distribution"
