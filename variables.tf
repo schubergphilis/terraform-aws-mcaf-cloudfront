@@ -215,7 +215,7 @@ variable "ipv6_enabled" {
 variable "kms_key_arn" {
   type        = string
   default     = null
-  description = "The ARN of the KMS key used for encryption"
+  description = "The ARN of the KMS key used for all encryption: SSM SecureString parameters, Lambda CloudWatch log group, and S3 origin bucket"
 }
 
 variable "lambda_function_association" {

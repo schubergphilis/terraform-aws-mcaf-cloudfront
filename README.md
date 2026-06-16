@@ -5,8 +5,6 @@ Terraform to create a CloudFront distribution with a S3 origin bucket and Okta a
 As opposed to other MCAF modules, this module does not provide a specific resource, but rather a set of resources that can be used to create a CloudFront distribution with an S3 origin bucket and Okta authentication. It is a very specific use case with a specific set of requirements. 
 
 
-```hcl
-
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -30,7 +28,7 @@ As opposed to other MCAF modules, this module does not provide a specific resour
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_authentication"></a> [authentication](#module\_authentication) | schubergphilis/mcaf-lambda/aws | ~> 3.0.0 |
-| <a name="module_origin_bucket"></a> [origin\_bucket](#module\_origin\_bucket) | schubergphilis/mcaf-s3/aws | ~> 2.0.0 |
+| <a name="module_origin_bucket"></a> [origin\_bucket](#module\_origin\_bucket) | schubergphilis/mcaf-s3/aws | ~> 3.0.0 |
 
 ## Resources
 
@@ -102,7 +100,7 @@ As opposed to other MCAF modules, this module does not provide a specific resour
 | <a name="input_hide_web"></a> [hide\_web](#input\_hide\_web) | Do not display the Okta application icon to users | `bool` | `false` | no |
 | <a name="input_ignore_public_acls"></a> [ignore\_public\_acls](#input\_ignore\_public\_acls) | Whether Amazon S3 should ignore public ACLs for this bucket | `bool` | `true` | no |
 | <a name="input_ipv6_enabled"></a> [ipv6\_enabled](#input\_ipv6\_enabled) | Whether IPv6 is enabled for the distribution | `bool` | `false` | no |
-| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | The ARN of the KMS key used for encryption | `string` | `null` | no |
+| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | The ARN of the KMS key used for all encryption: SSM SecureString parameters, Lambda CloudWatch log group, and S3 origin bucket | `string` | `null` | no |
 | <a name="input_lambda_function_association"></a> [lambda\_function\_association](#input\_lambda\_function\_association) | A config block that triggers a lambda function with specific actions | <pre>list(object({<br/>    event_type   = string<br/>    include_body = bool<br/>    lambda_arn   = string<br/>  }))</pre> | `[]` | no |
 | <a name="input_logging"></a> [logging](#input\_logging) | Logging configuration, logging is disabled by default. | <pre>object({<br/>    target_bucket = string<br/>    target_prefix = string<br/>    output_format = optional(string, "parquet")<br/>  })</pre> | `null` | no |
 | <a name="input_login_uri_path"></a> [login\_uri\_path](#input\_login\_uri\_path) | Optional path to the login URL | `string` | `null` | no |

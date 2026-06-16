@@ -47,7 +47,7 @@ data "aws_iam_policy_document" "origin_bucket" {
 
 module "origin_bucket" {
   source  = "schubergphilis/mcaf-s3/aws"
-  version = "~> 2.0.0"
+  version = "~> 3.0.0"
 
   region                  = var.region
   name                    = var.name
@@ -55,6 +55,7 @@ module "origin_bucket" {
   block_public_policy     = var.block_public_policy
   force_destroy           = var.force_destroy
   ignore_public_acls      = var.ignore_public_acls
+  kms_key_arn             = var.kms_key_arn
   lifecycle_rule          = var.bucket_lifecycle_rule
   restrict_public_buckets = var.restrict_public_buckets
   policy                  = data.aws_iam_policy_document.origin_bucket.json

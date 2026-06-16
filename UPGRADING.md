@@ -2,6 +2,13 @@
 
 This document captures required refactoring on your part when upgrading to a module version that contains breaking changes.
 
+## Upgrading to v3.0.0
+
+### Key Changes
+
+- `kms_key_arn` is now used to encrypt all relevant resources: SSM SecureString parameters, the authentication Lambda CloudWatch log group, and the S3 origin bucket.
+- mcaf-s3 bucket upgraded to ~> 3.0.0 
+
 ## Upgrading to v2.0.0
 
 ### Key Changes
