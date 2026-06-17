@@ -112,6 +112,7 @@ As opposed to other MCAF modules, this module does not provide a specific resour
 | <a name="input_okta_org_name"></a> [okta\_org\_name](#input\_okta\_org\_name) | The Okta organization for the OIDC application | `string` | `null` | no |
 | <a name="input_okta_spa"></a> [okta\_spa](#input\_okta\_spa) | Set to true if this is a single page web application | `bool` | `false` | no |
 | <a name="input_origin_path"></a> [origin\_path](#input\_origin\_path) | A path that CloudFront uses to request your content from a specific directory | `string` | `""` | no |
+| <a name="input_permissions_boundary_arn"></a> [permissions\_boundary\_arn](#input\_permissions\_boundary\_arn) | ARN of the IAM permissions boundary policy for the authentication Lambda execution role | `string` | `null` | no |
 | <a name="input_price_class"></a> [price\_class](#input\_price\_class) | Price class for this distribution | `string` | `"PriceClass_100"` | no |
 | <a name="input_redirect_uri_path"></a> [redirect\_uri\_path](#input\_redirect\_uri\_path) | Path to the login redirect URL | `string` | `"_callback"` | no |
 | <a name="input_region"></a> [region](#input\_region) | The AWS region where resources will be created; if omitted the default provider region is used | `string` | `null` | no |

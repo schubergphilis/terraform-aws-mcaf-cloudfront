@@ -218,6 +218,12 @@ variable "kms_key_arn" {
   description = "The ARN of the KMS key used for all encryption: SSM SecureString parameters, Lambda CloudWatch log group, and S3 origin bucket"
 }
 
+variable "permissions_boundary_arn" {
+  type        = string
+  default     = null
+  description = "ARN of the IAM permissions boundary policy for the authentication Lambda execution role"
+}
+
 variable "lambda_function_association" {
   type = list(object({
     event_type   = string
