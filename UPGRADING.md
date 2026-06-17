@@ -6,6 +6,7 @@ This document captures required refactoring on your part when upgrading to a mod
 
 ### Key Changes
 
+- Minimum required Terraform version bumped to `>= 1.9.0`.
 - Added support for reusing an existing Okta application:
   - `okta_existing_app_id`
   - `okta_existing_client_id`

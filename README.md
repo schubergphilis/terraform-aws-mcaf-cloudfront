@@ -10,7 +10,7 @@ As opposed to other MCAF modules, this module does not provide a specific resour
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 6.0 |
 | <a name="requirement_okta"></a> [okta](#requirement\_okta) | >= 6.0.0 |
 | <a name="requirement_tls"></a> [tls](#requirement\_tls) | ~> 4.1 |

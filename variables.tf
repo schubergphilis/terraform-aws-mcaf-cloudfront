@@ -295,7 +295,15 @@ variable "okta_spa" {
 variable "okta_existing_app_id" {
   type        = string
   default     = null
-  description = "ID of an existing Okta application to use. If set, the module will not create a new Okta app. When using non-SPA mode, okta_existing_client_id and okta_existing_client_secret must also be provided."
+  description = "ID of an existing Okta application to use. If set, the module will not create a new Okta app."
+
+  validation {
+    condition = (
+      var.okta_existing_app_id == null ||
+      (var.okta_existing_client_id != null && var.okta_existing_client_secret != null)
+    )
+    error_message = "okta_existing_client_id and okta_existing_client_secret must be set when okta_existing_app_id is provided."
+  }
 }
 
 variable "okta_existing_client_id" {

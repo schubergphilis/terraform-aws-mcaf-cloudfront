@@ -66,7 +66,7 @@ module "authentication" {
 }
 
 resource "okta_app_oauth" "default" {
-  count                      = length(local.create_okta_app)
+  count                      = length(local.create_okta_app) > 0 ? 1 : 0
   label                      = var.okta_app_name
   status                     = "ACTIVE"
   type                       = var.okta_spa ? "browser" : "web"
@@ -110,17 +110,6 @@ resource "aws_ssm_parameter" "client_id" {
   type   = "SecureString"
   value  = local.effective_okta_client_id
   tags   = var.tags
-
-  lifecycle {
-    precondition {
-      condition     = var.okta_existing_app_id == null || (var.okta_existing_client_id != null && var.okta_existing_client_id != "")
-      error_message = "okta_existing_client_id is required and must not be empty when okta_existing_app_id is set."
-    }
-    precondition {
-      condition     = var.okta_existing_app_id == null || (var.okta_existing_client_secret != null && var.okta_existing_client_secret != "")
-      error_message = "okta_existing_client_secret is required and must not be empty when okta_existing_app_id is set."
-    }
-  }
 }
 
 resource "aws_ssm_parameter" "client_secret" {
