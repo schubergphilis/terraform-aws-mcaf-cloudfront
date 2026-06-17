@@ -111,6 +111,9 @@ As opposed to other MCAF modules, this module does not provide a specific resour
 | <a name="input_okta_groups"></a> [okta\_groups](#input\_okta\_groups) | The default groups assigned to the Okta OIDC application | `list(string)` | `[]` | no |
 | <a name="input_okta_org_name"></a> [okta\_org\_name](#input\_okta\_org\_name) | The Okta organization for the OIDC application | `string` | `null` | no |
 | <a name="input_okta_spa"></a> [okta\_spa](#input\_okta\_spa) | Set to true if this is a single page web application | `bool` | `false` | no |
+| <a name="input_okta_existing_app_id"></a> [okta\_existing\_app\_id](#input\_okta\_existing\_app\_id) | ID of an existing Okta application to use. If set, the module will not create a new Okta app. When using non-SPA mode, okta\_existing\_client\_id and okta\_existing\_client\_secret must also be provided. | `string` | `null` | no |
+| <a name="input_okta_existing_client_id"></a> [okta\_existing\_client\_id](#input\_okta\_existing\_client\_id) | Client ID of the existing Okta application. Required in non-SPA mode when okta\_existing\_app\_id is set. | `string` | `null` | no |
+| <a name="input_okta_existing_client_secret"></a> [okta\_existing\_client\_secret](#input\_okta\_existing\_client\_secret) | Client secret of the existing Okta application. Required in non-SPA mode when okta\_existing\_app\_id is set. | `string` | `null` | no |
 | <a name="input_origin_path"></a> [origin\_path](#input\_origin\_path) | A path that CloudFront uses to request your content from a specific directory | `string` | `""` | no |
 | <a name="input_permissions_boundary_arn"></a> [permissions\_boundary\_arn](#input\_permissions\_boundary\_arn) | ARN of the IAM permissions boundary policy for the authentication Lambda execution role | `string` | `null` | no |
 | <a name="input_price_class"></a> [price\_class](#input\_price\_class) | Price class for this distribution | `string` | `"PriceClass_100"` | no |

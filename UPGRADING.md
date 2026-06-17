@@ -2,6 +2,24 @@
 
 This document captures required refactoring on your part when upgrading to a module version that contains breaking changes.
 
+## Upgrading to v4.0.0
+
+### Key Changes
+
+- Added support for reusing an existing Okta application:
+  - `okta_existing_app_id`
+  - `okta_existing_client_id`
+  - `okta_existing_client_secret`
+- Authentication logic now conditionally creates the Okta app only when `okta_existing_app_id` is not set.
+
+### Migration Notes
+
+- Existing users are unaffected by default (all new inputs are optional and default to `null`).
+- If you switch from module-managed Okta app creation to `okta_existing_app_id`, Terraform will stop managing `okta_app_oauth.default`.
+- In non-SPA mode (`authentication = true` and `okta_spa = false`), when `okta_existing_app_id` is set you must also provide:
+  - `okta_existing_client_id`
+  - `okta_existing_client_secret`
+
 ## Upgrading to v3.0.0
 
 ### Key Changes

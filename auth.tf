@@ -1,12 +1,17 @@
 locals {
   cookie_domain      = var.cookie_domain != null ? var.cookie_domain : local.login_domain
   create_auth_lambda = var.authentication && !var.okta_spa ? ["create"] : []
+  create_okta_app    = var.authentication && var.okta_existing_app_id == null ? ["create"] : []
   global_region      = "us-east-1"
   login_domain       = aws_route53_record.cloudfront.name
   login_uri          = var.login_uri_path != null ? format("https://%s/%s", local.login_domain, trimprefix(var.login_uri_path, "/")) : "https://${local.login_domain}/"
   okta_groups        = var.authentication ? var.okta_groups : []
   redirect_uri       = "https://${local.login_domain}/${trimprefix(var.redirect_uri_path, "/")}"
   ssm_prefix         = "/cloudfront-config/${aws_cloudfront_distribution.default.id}"
+
+  effective_okta_app_id        = var.okta_existing_app_id != null ? var.okta_existing_app_id : try(okta_app_oauth.default[0].id, null)
+  effective_okta_client_id     = var.okta_existing_app_id != null ? var.okta_existing_client_id : try(okta_app_oauth.default[0].client_id, null)
+  effective_okta_client_secret = var.okta_existing_app_id != null ? var.okta_existing_client_secret : try(okta_app_oauth.default[0].client_secret, null)
 }
 
 data "aws_iam_policy_document" "authentication" {
@@ -61,7 +66,7 @@ module "authentication" {
 }
 
 resource "okta_app_oauth" "default" {
-  count                      = var.authentication ? 1 : 0
+  count                      = length(local.create_okta_app)
   label                      = var.okta_app_name
   status                     = "ACTIVE"
   type                       = var.okta_spa ? "browser" : "web"
@@ -80,7 +85,7 @@ resource "okta_app_oauth" "default" {
 
 resource "okta_app_group_assignments" "default" {
   count  = length(local.okta_groups) > 0 ? 1 : 0
-  app_id = okta_app_oauth.default[0].id
+  app_id = local.effective_okta_app_id
 
   dynamic "group" {
     for_each = toset(local.okta_groups)
@@ -103,8 +108,19 @@ resource "aws_ssm_parameter" "client_id" {
   name   = "${local.ssm_prefix}/client_id"
   key_id = var.kms_key_arn
   type   = "SecureString"
-  value  = okta_app_oauth.default[0].client_id
+  value  = local.effective_okta_client_id
   tags   = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = var.okta_existing_app_id == null || (var.okta_existing_client_id != null && var.okta_existing_client_id != "")
+      error_message = "okta_existing_client_id is required and must not be empty when okta_existing_app_id is set."
+    }
+    precondition {
+      condition     = var.okta_existing_app_id == null || (var.okta_existing_client_secret != null && var.okta_existing_client_secret != "")
+      error_message = "okta_existing_client_secret is required and must not be empty when okta_existing_app_id is set."
+    }
+  }
 }
 
 resource "aws_ssm_parameter" "client_secret" {
@@ -114,7 +130,7 @@ resource "aws_ssm_parameter" "client_secret" {
   name   = "${local.ssm_prefix}/client_secret"
   key_id = var.kms_key_arn
   type   = "SecureString"
-  value  = okta_app_oauth.default[0].client_secret
+  value  = local.effective_okta_client_secret
   tags   = var.tags
 }
 

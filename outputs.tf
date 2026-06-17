@@ -39,7 +39,7 @@ output "status" {
 }
 
 output "okta_client_id" {
-  value       = try(okta_app_oauth.default[0].client_id, null)
+  value       = local.effective_okta_client_id
   description = "Okta App Client ID"
 }
 

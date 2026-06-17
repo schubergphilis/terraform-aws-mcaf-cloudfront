@@ -292,6 +292,25 @@ variable "okta_spa" {
   description = "Set to true if this is a single page web application"
 }
 
+variable "okta_existing_app_id" {
+  type        = string
+  default     = null
+  description = "ID of an existing Okta application to use. If set, the module will not create a new Okta app. When using non-SPA mode, okta_existing_client_id and okta_existing_client_secret must also be provided."
+}
+
+variable "okta_existing_client_id" {
+  type        = string
+  default     = null
+  description = "Client ID of the existing Okta application. Required when okta_existing_app_id is set."
+}
+
+variable "okta_existing_client_secret" {
+  type        = string
+  default     = null
+  sensitive   = true
+  description = "Client secret of the existing Okta application. Required when okta_existing_app_id is set."
+}
+
 variable "origin_path" {
   type        = string
   default     = ""
