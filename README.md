@@ -10,7 +10,7 @@ As opposed to other MCAF modules, this module does not provide a specific resour
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 6.0 |
 | <a name="requirement_okta"></a> [okta](#requirement\_okta) | >= 6.0.0 |
 | <a name="requirement_tls"></a> [tls](#requirement\_tls) | ~> 4.1 |
@@ -108,6 +108,9 @@ As opposed to other MCAF modules, this module does not provide a specific resour
 | <a name="input_min_ttl"></a> [min\_ttl](#input\_min\_ttl) | Minimum amount of time that you want objects to stay in CloudFront caches | `number` | `0` | no |
 | <a name="input_minimum_protocol_version"></a> [minimum\_protocol\_version](#input\_minimum\_protocol\_version) | The minimum version of the SSL protocol that you want CloudFront to use for HTTPS connections | `string` | `"TLSv1.2_2021"` | no |
 | <a name="input_okta_app_name"></a> [okta\_app\_name](#input\_okta\_app\_name) | The Okta OIDC application name | `string` | `null` | no |
+| <a name="input_okta_existing_app_id"></a> [okta\_existing\_app\_id](#input\_okta\_existing\_app\_id) | ID of an existing Okta application to use. If set, the module will not create a new Okta app. | `string` | `null` | no |
+| <a name="input_okta_existing_client_id"></a> [okta\_existing\_client\_id](#input\_okta\_existing\_client\_id) | Client ID of the existing Okta application. Required when okta\_existing\_app\_id is set. | `string` | `null` | no |
+| <a name="input_okta_existing_client_secret"></a> [okta\_existing\_client\_secret](#input\_okta\_existing\_client\_secret) | Client secret of the existing Okta application. Required when okta\_existing\_app\_id is set. | `string` | `null` | no |
 | <a name="input_okta_groups"></a> [okta\_groups](#input\_okta\_groups) | The default groups assigned to the Okta OIDC application | `list(string)` | `[]` | no |
 | <a name="input_okta_org_name"></a> [okta\_org\_name](#input\_okta\_org\_name) | The Okta organization for the OIDC application | `string` | `null` | no |
 | <a name="input_okta_spa"></a> [okta\_spa](#input\_okta\_spa) | Set to true if this is a single page web application | `bool` | `false` | no |
