@@ -41,6 +41,22 @@ data "aws_iam_policy_document" "authentication" {
       "arn:aws:ssm:*:*:parameter/cloudfront-config/*"
     ]
   }
+
+  dynamic "statement" {
+    for_each = var.kms_key_arn != null ? [var.kms_key_arn] : []
+
+    content {
+      sid       = "AllowKmsDecryptForSsmParameters"
+      actions   = ["kms:Decrypt", "kms:DescribeKey"]
+      resources = [statement.value]
+
+      condition {
+        test     = "StringEquals"
+        variable = "kms:ViaService"
+        values   = ["ssm.${local.global_region}.amazonaws.com"]
+      }
+    }
+  }
 }
 
 module "authentication" {
