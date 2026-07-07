@@ -1,3 +1,9 @@
+<!-- migrate-repo:banner -->
+> [!IMPORTANT]
+> **This repository has moved to [`schubergphilis-ep/terraform-aws-mcaf-cloudfront-s3-origin`](https://github.com/schubergphilis-ep/terraform-aws-mcaf-cloudfront-s3-origin).**
+> Please update your references and use the new location for issues, PRs, and contributions.
+<!-- migrate-repo:banner -->
+
 # terraform-aws-mcaf-cloudfront
 
 Terraform to create a CloudFront distribution with a S3 origin bucket and Okta authentication.
